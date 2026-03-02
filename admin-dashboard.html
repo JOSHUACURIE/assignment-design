@@ -50,6 +50,7 @@
             transition: all 0.3s ease;
             z-index: 1000;
             border-right: 1px solid var(--light-gray);
+            overflow-y: auto;
         }
 
         .sidebar-header {
@@ -123,6 +124,7 @@
             margin-bottom: 5px;
             transition: all 0.3s;
             font-weight: 500;
+            cursor: pointer;
         }
 
         .nav-link-custom i {
@@ -351,6 +353,7 @@
             padding: 25px;
             border: 1px solid var(--light-gray);
             margin-bottom: 25px;
+            overflow-x: auto;
         }
 
         .table-custom {
@@ -423,6 +426,7 @@
             justify-content: center;
             margin: 0 3px;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .btn-icon.edit {
@@ -450,6 +454,11 @@
             color: var(--forest-green);
         }
 
+        .btn-icon.view:hover {
+            background: var(--forest-green);
+            color: white;
+        }
+
         .btn-primary-custom {
             background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
             border: none;
@@ -458,6 +467,7 @@
             border-radius: 12px;
             font-weight: 600;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .btn-primary-custom:hover {
@@ -473,6 +483,7 @@
             border-radius: 12px;
             font-weight: 600;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .btn-outline-custom:hover {
@@ -486,6 +497,7 @@
             border-radius: 12px;
             padding: 10px 15px;
             transition: all 0.3s;
+            width: 100%;
         }
 
         .form-control-custom:focus {
@@ -577,6 +589,52 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* Nav Tabs */
+        .nav-tabs .nav-link {
+            color: var(--slate-gray);
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-blue);
+            background: var(--light-blue);
+            border-radius: 30px;
+        }
+
+        /* Course Tab Content - NEW STYLES */
+        .course-tab-content {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .course-tab-pane {
+            display: none;
+        }
+
+        .course-tab-pane.show.active {
+            display: block;
+        }
+
+        /* Assignment Tabs */
+        .assignment-tab-content {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        #assignmentSubTabs .nav-link {
+            color: var(--slate-gray);
+            border: none;
+            padding: 8px 16px;
+            font-weight: 500;
+        }
+        
+        #assignmentSubTabs .nav-link.active {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            border-radius: 20px;
         }
 
         /* Responsive */
@@ -807,21 +865,18 @@
                     </div>
                 </div>
             </div>
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="table-container">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <i class="fas fa-history"></i>
-                    Recent Borrowings
-                </h5>
-                <a href="#" onclick="switchTab('borrowings', document.querySelector('[onclick*=\'borrowings\']'))" class="text-primary">View All</a>
-            </div>
-            
-            <div class="card-body">
-                <p class="text-muted">No recent activity found.</p>
-            </div>
-        </div> </div> </div>
+
+            <!-- Recent Activities -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="table-container">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-history"></i>
+                                Recent Borrowings
+                            </h5>
+                            <a href="#" onclick="switchTab('borrowings', document.querySelectorAll('.nav-link-custom')[4])" class="text-primary">View All</a>
+                        </div>
                         <table class="table-custom">
                             <thead>
                                 <tr>
@@ -873,7 +928,7 @@
                                 <i class="fas fa-clock"></i>
                                 Pending Reservations
                             </h5>
-                            <a href="#" onclick="switchTab('reservations', document.querySelector('[onclick*=\"reservations\"]'))" class="text-primary">Process</a>
+                            <a href="#" onclick="switchTab('reservations', document.querySelectorAll('.nav-link-custom')[5])" class="text-primary">Process</a>
                         </div>
                         <table class="table-custom">
                             <thead>
@@ -1208,6 +1263,717 @@
             </div>
         </div>
 
+        <!-- FIXED: Course Management Section -->
+        <div id="courses" class="tab-content" style="display: none;">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-book-open text-primary me-2"></i>
+                        Course Management
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn-outline-custom" onclick="exportCourseData()">
+                            <i class="fas fa-download me-2"></i>Export
+                        </button>
+                        <button class="btn-primary-custom" onclick="openQuickAction('course')">
+                            <i class="fas fa-plus me-2"></i>Quick Action
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Course Management Sub Navigation -->
+                <ul class="nav nav-pills mb-4" id="courseTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="programs-tab" data-bs-toggle="pill" data-bs-target="#programs" type="button" role="tab">
+                            <i class="fas fa-layer-group me-2"></i>Programs
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="courses-tab" data-bs-toggle="pill" data-bs-target="#coursesList" type="button" role="tab">
+                            <i class="fas fa-book me-2"></i>Courses
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="semesters-tab" data-bs-toggle="pill" data-bs-target="#semesters" type="button" role="tab">
+                            <i class="fas fa-calendar-alt me-2"></i>Semesters
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="assignments-tab" data-bs-toggle="pill" data-bs-target="#assignments" type="button" role="tab">
+                            <i class="fas fa-user-plus me-2"></i>Assignments
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="years-tab" data-bs-toggle="pill" data-bs-target="#years" type="button" role="tab">
+                            <i class="fas fa-clock me-2"></i>Academic Years
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- FIXED: Changed from tab-content to course-tab-content -->
+                <div class="course-tab-content" id="courseTabsContent">
+                    <!-- Programs Tab -->
+                    <div class="course-tab-pane show active" id="programs" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold"><i class="fas fa-layer-group text-primary me-2"></i>Program Management</h6>
+                            <button class="btn-primary-custom btn-sm" onclick="addNewProgram()">
+                                <i class="fas fa-plus me-2"></i>Add Program
+                            </button>
+                        </div>
+
+                        <!-- Programs Stats -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Total Programs</small>
+                                            <h4>8</h4>
+                                        </div>
+                                        <i class="fas fa-layer-group text-primary fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Active Programs</small>
+                                            <h4>6</h4>
+                                        </div>
+                                        <i class="fas fa-check-circle text-success fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Total Students</small>
+                                            <h4>1,284</h4>
+                                        </div>
+                                        <i class="fas fa-users text-info fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Courses</small>
+                                            <h4>124</h4>
+                                        </div>
+                                        <i class="fas fa-book text-warning fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Programs Table -->
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Program Code</th>
+                                    <th>Program Name</th>
+                                    <th>Duration</th>
+                                    <th>Total Courses</th>
+                                    <th>Students Enrolled</th>
+                                    <th>Coordinator</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">BSC-CS</span></td>
+                                    <td>B.Sc. Computer Science</td>
+                                    <td>4 Years</td>
+                                    <td>42</td>
+                                    <td>450</td>
+                                    <td>Dr. Sarah Johnson</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editProgram('BSC-CS')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewProgram('BSC-CS')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteProgram('BSC-CS')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">BSC-IT</span></td>
+                                    <td>B.Sc. Information Technology</td>
+                                    <td>4 Years</td>
+                                    <td>38</td>
+                                    <td>320</td>
+                                    <td>Prof. Michael Chen</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editProgram('BSC-IT')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewProgram('BSC-IT')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteProgram('BSC-IT')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">BSC-SE</span></td>
+                                    <td>B.Sc. Software Engineering</td>
+                                    <td>4 Years</td>
+                                    <td>45</td>
+                                    <td>280</td>
+                                    <td>Dr. Emily Brown</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editProgram('BSC-SE')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewProgram('BSC-SE')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteProgram('BSC-SE')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">MSC-CS</span></td>
+                                    <td>M.Sc. Computer Science</td>
+                                    <td>2 Years</td>
+                                    <td>24</td>
+                                    <td>85</td>
+                                    <td>Prof. David Wilson</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editProgram('MSC-CS')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewProgram('MSC-CS')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteProgram('MSC-CS')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Courses List Tab -->
+                    <div class="course-tab-pane fade" id="coursesList" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold"><i class="fas fa-book text-primary me-2"></i>Course Catalog</h6>
+                            <button class="btn-primary-custom btn-sm" onclick="addNewCourse()">
+                                <i class="fas fa-plus me-2"></i>Add Course
+                            </button>
+                        </div>
+
+                        <!-- Filter Bar for Courses -->
+                        <div class="filter-bar mb-3">
+                            <input type="text" class="form-control-custom" placeholder="Search courses..." style="flex: 1;" id="courseSearch" onkeyup="filterCourses()">
+                            <select class="filter-select" onchange="filterByProgram(this.value)">
+                                <option value="all">All Programs</option>
+                                <option value="cs">Computer Science</option>
+                                <option value="it">Information Technology</option>
+                                <option value="se">Software Engineering</option>
+                            </select>
+                            <select class="filter-select" onchange="filterByYear(this.value)">
+                                <option value="all">All Years</option>
+                                <option value="1">Year 1</option>
+                                <option value="2">Year 2</option>
+                                <option value="3">Year 3</option>
+                                <option value="4">Year 4</option>
+                            </select>
+                        </div>
+
+                        <table class="table-custom" id="coursesTable">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Title</th>
+                                    <th>Program</th>
+                                    <th>Year</th>
+                                    <th>Semester</th>
+                                    <th>Credits</th>
+                                    <th>Lecturer</th>
+                                    <th>Students</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-info">CSC301</span></td>
+                                    <td>Data Structures & Algorithms</td>
+                                    <td>B.Sc. CS</td>
+                                    <td>Year 3</td>
+                                    <td>Sem 1</td>
+                                    <td>4</td>
+                                    <td>Dr. Sarah Johnson</td>
+                                    <td>45</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editCourse('CSC301')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewCourse('CSC301')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteCourse('CSC301')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-info">CSC305</span></td>
+                                    <td>Database Systems</td>
+                                    <td>B.Sc. CS</td>
+                                    <td>Year 3</td>
+                                    <td>Sem 1</td>
+                                    <td>4</td>
+                                    <td>Prof. Michael Chen</td>
+                                    <td>38</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editCourse('CSC305')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewCourse('CSC305')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteCourse('CSC305')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-info">CSC310</span></td>
+                                    <td>Operating Systems</td>
+                                    <td>B.Sc. CS</td>
+                                    <td>Year 2</td>
+                                    <td>Sem 2</td>
+                                    <td>3</td>
+                                    <td>Dr. Emily Brown</td>
+                                    <td>52</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editCourse('CSC310')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewCourse('CSC310')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteCourse('CSC310')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-info">CSC320</span></td>
+                                    <td>Computer Networks</td>
+                                    <td>B.Sc. IT</td>
+                                    <td>Year 3</td>
+                                    <td>Sem 2</td>
+                                    <td>4</td>
+                                    <td>Prof. David Wilson</td>
+                                    <td>41</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editCourse('CSC320')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewCourse('CSC320')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteCourse('CSC320')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-info">CSC330</span></td>
+                                    <td>Software Engineering</td>
+                                    <td>B.Sc. SE</td>
+                                    <td>Year 4</td>
+                                    <td>Sem 1</td>
+                                    <td>4</td>
+                                    <td>Dr. Lisa Anderson</td>
+                                    <td>32</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editCourse('CSC330')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewCourse('CSC330')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteCourse('CSC330')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Semesters Tab -->
+                    <div class="course-tab-pane fade" id="semesters" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold"><i class="fas fa-calendar-alt text-primary me-2"></i>Semester Management</h6>
+                            <button class="btn-primary-custom btn-sm" onclick="addNewSemester()">
+                                <i class="fas fa-plus me-2"></i>Add Semester
+                            </button>
+                        </div>
+
+                        <!-- Current Semester Overview -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="glass-card p-3">
+                                    <h6 class="mb-3">Current Active Semester</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4 class="text-primary">Semester 2, 2026</h4>
+                                            <p class="text-muted mb-0">Jan 15, 2026 - May 30, 2026</p>
+                                        </div>
+                                        <span class="status-badge status-active">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-card p-3">
+                                    <h6 class="mb-3">Upcoming Semester</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h4>Semester 1, 2027</h4>
+                                            <p class="text-muted mb-0">Sep 1, 2026 - Dec 20, 2026</p>
+                                        </div>
+                                        <span class="status-badge status-pending">Upcoming</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Semester</th>
+                                    <th>Academic Year</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Courses Offered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">Semester 1</span></td>
+                                    <td>2025/2026</td>
+                                    <td>Sep 1, 2025</td>
+                                    <td>Dec 20, 2025</td>
+                                    <td><span class="status-badge status-returned">Completed</span></td>
+                                    <td>42</td>
+                                    <td>
+                                        <button class="btn-icon view" onclick="viewSemester(1)"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">Semester 2</span></td>
+                                    <td>2025/2026</td>
+                                    <td>Jan 15, 2026</td>
+                                    <td>May 30, 2026</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>45</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editSemester(2)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewSemester(2)"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">Semester 1</span></td>
+                                    <td>2026/2027</td>
+                                    <td>Sep 1, 2026</td>
+                                    <td>Dec 20, 2026</td>
+                                    <td><span class="status-badge status-pending">Upcoming</span></td>
+                                    <td>48</td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editSemester(3)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteSemester(3)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Assignments Tab -->
+                    <div class="course-tab-pane fade" id="assignments" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold"><i class="fas fa-user-plus text-primary me-2"></i>Course Assignments</h6>
+                            <button class="btn-primary-custom btn-sm" onclick="openAssignmentModal()">
+                                <i class="fas fa-plus me-2"></i>New Assignment
+                            </button>
+                        </div>
+
+                        <!-- Quick Assignment Stats -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Courses with Lecturers</small>
+                                            <h4>86</h4>
+                                        </div>
+                                        <i class="fas fa-chalkboard-teacher text-primary fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Unassigned Courses</small>
+                                            <h4>12</h4>
+                                        </div>
+                                        <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-card small p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <small class="text-muted">Active Lecturers</small>
+                                            <h4>48</h4>
+                                        </div>
+                                        <i class="fas fa-users text-success fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assignment Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="assignmentSubTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" onclick="showAssignmentTab('lecturer-courses', this)">Lecturer Assignments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showAssignmentTab('student-courses', this)">Student Enrollments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" onclick="showAssignmentTab('bulk-assign', this)">Bulk Operations</a>
+                            </li>
+                        </ul>
+
+                        <!-- Lecturer Assignments -->
+                        <div id="lecturer-courses" class="assignment-tab-content">
+                            <div class="filter-bar mb-3">
+                                <select class="filter-select" onchange="filterByLecturer(this.value)">
+                                    <option value="all">All Lecturers</option>
+                                    <option value="sarah">Dr. Sarah Johnson</option>
+                                    <option value="michael">Prof. Michael Chen</option>
+                                    <option value="emily">Dr. Emily Brown</option>
+                                </select>
+                                <select class="filter-select" onchange="filterBySemester(this.value)">
+                                    <option value="current">Current Semester</option>
+                                    <option value="next">Next Semester</option>
+                                    <option value="previous">Previous Semester</option>
+                                </select>
+                            </div>
+
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Lecturer</th>
+                                        <th>Department</th>
+                                        <th>Assigned Courses</th>
+                                        <th>Total Students</th>
+                                        <th>Teaching Load</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row">
+                                        <td><strong>Dr. Sarah Johnson</strong></td>
+                                        <td>Computer Science</td>
+                                        <td>
+                                            <span class="badge bg-info me-1">CSC301</span>
+                                            <span class="badge bg-info me-1">CSC401</span>
+                                            <span class="badge bg-info">CSC410</span>
+                                        </td>
+                                        <td>124</td>
+                                        <td>3 courses</td>
+                                        <td>
+                                            <button class="btn-icon edit" onclick="editAssignment('sarah')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon view" onclick="viewAssignment('sarah')"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td><strong>Prof. Michael Chen</strong></td>
+                                        <td>Information Technology</td>
+                                        <td>
+                                            <span class="badge bg-info me-1">CSC305</span>
+                                            <span class="badge bg-info me-1">CSC402</span>
+                                            <span class="badge bg-info">CSC415</span>
+                                        </td>
+                                        <td>98</td>
+                                        <td>3 courses</td>
+                                        <td>
+                                            <button class="btn-icon edit" onclick="editAssignment('michael')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon view" onclick="viewAssignment('michael')"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td><strong>Dr. Emily Brown</strong></td>
+                                        <td>Software Engineering</td>
+                                        <td>
+                                            <span class="badge bg-info me-1">CSC310</span>
+                                            <span class="badge bg-info me-1">CSC403</span>
+                                            <span class="badge bg-warning">CSC425 (Pending)</span>
+                                        </td>
+                                        <td>87</td>
+                                        <td>2 courses + 1 pending</td>
+                                        <td>
+                                            <button class="btn-icon edit" onclick="editAssignment('emily')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon view" onclick="viewAssignment('emily')"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Student Enrollments (Hidden by default) -->
+                        <div id="student-courses" class="assignment-tab-content" style="display: none;">
+                            <div class="filter-bar mb-3">
+                                <input type="text" class="form-control-custom" placeholder="Search student..." style="flex: 1;">
+                                <select class="filter-select">
+                                    <option>All Programs</option>
+                                    <option>B.Sc. CS</option>
+                                    <option>B.Sc. IT</option>
+                                    <option>B.Sc. SE</option>
+                                </select>
+                                <select class="filter-select">
+                                    <option>Year 1</option>
+                                    <option>Year 2</option>
+                                    <option>Year 3</option>
+                                    <option>Year 4</option>
+                                </select>
+                            </div>
+
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Student Name</th>
+                                        <th>Program</th>
+                                        <th>Year</th>
+                                        <th>Enrolled Courses</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="table-row">
+                                        <td>STU001</td>
+                                        <td>John Doe</td>
+                                        <td>B.Sc. CS</td>
+                                        <td>Year 3</td>
+                                        <td>
+                                            <span class="badge bg-info me-1">CSC301</span>
+                                            <span class="badge bg-info me-1">CSC305</span>
+                                            <span class="badge bg-info">CSC310</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn-icon edit" onclick="editEnrollment('STU001')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon view" onclick="viewEnrollment('STU001')"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-row">
+                                        <td>STU042</td>
+                                        <td>Mercy Wanjiku</td>
+                                        <td>B.Sc. SE</td>
+                                        <td>Year 2</td>
+                                        <td>
+                                            <span class="badge bg-info me-1">CSC210</span>
+                                            <span class="badge bg-info me-1">CSC220</span>
+                                            <span class="badge bg-info">CSC230</span>
+                                        </td>
+                                        <td>
+                                            <button class="btn-icon edit" onclick="editEnrollment('STU042')"><i class="fas fa-edit"></i></button>
+                                            <button class="btn-icon view" onclick="viewEnrollment('STU042')"><i class="fas fa-eye"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Bulk Operations (Hidden by default) -->
+                        <div id="bulk-assign" class="assignment-tab-content" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="glass-card p-4 text-center">
+                                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                        <h5>Bulk Assign Students to Courses</h5>
+                                        <p class="text-muted">Upload CSV file with student enrollments</p>
+                                        <button class="btn-primary-custom" onclick="bulkAssignStudents()">
+                                            <i class="fas fa-upload me-2"></i>Upload CSV
+                                        </button>
+                                        <a href="#" class="d-block mt-2 text-primary">Download template</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="glass-card p-4 text-center">
+                                        <i class="fas fa-chalkboard-teacher fa-3x text-success mb-3"></i>
+                                        <h5>Bulk Assign Lecturers to Courses</h5>
+                                        <p class="text-muted">Upload CSV file with lecturer assignments</p>
+                                        <button class="btn-primary-custom" onclick="bulkAssignLecturers()">
+                                            <i class="fas fa-upload me-2"></i>Upload CSV
+                                        </button>
+                                        <a href="#" class="d-block mt-2 text-primary">Download template</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h6 class="mb-3">Recent Bulk Operations</h6>
+                                <table class="table-custom">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Operation</th>
+                                            <th>File</th>
+                                            <th>Status</th>
+                                            <th>Records Processed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-row">
+                                            <td>2026-03-01</td>
+                                            <td>Student Enrollments</td>
+                                            <td>enrollments_sem2.csv</td>
+                                            <td><span class="status-badge status-active">Completed</span></td>
+                                            <td>245</td>
+                                        </tr>
+                                        <tr class="table-row">
+                                            <td>2026-02-28</td>
+                                            <td>Lecturer Assignments</td>
+                                            <td>lecturer_courses.csv</td>
+                                            <td><span class="status-badge status-active">Completed</span></td>
+                                            <td>48</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Years Tab -->
+                    <div class="course-tab-pane fade" id="years" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold"><i class="fas fa-clock text-primary me-2"></i>Academic Year Management</h6>
+                            <button class="btn-primary-custom btn-sm" onclick="addAcademicYear()">
+                                <i class="fas fa-plus me-2"></i>Add Academic Year
+                            </button>
+                        </div>
+
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Academic Year</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Semesters</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">2024/2025</span></td>
+                                    <td>Sep 1, 2024</td>
+                                    <td>Aug 31, 2025</td>
+                                    <td>2</td>
+                                    <td><span class="status-badge status-returned">Completed</span></td>
+                                    <td>
+                                        <button class="btn-icon view" onclick="viewAcademicYear('2024/2025')"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">2025/2026</span></td>
+                                    <td>Sep 1, 2025</td>
+                                    <td>Aug 31, 2026</td>
+                                    <td>2</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editAcademicYear('2025/2026')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon view" onclick="viewAcademicYear('2025/2026')"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><span class="badge bg-primary">2026/2027</span></td>
+                                    <td>Sep 1, 2026</td>
+                                    <td>Aug 31, 2027</td>
+                                    <td>2</td>
+                                    <td><span class="status-badge status-pending">Upcoming</span></td>
+                                    <td>
+                                        <button class="btn-icon edit" onclick="editAcademicYear('2026/2027')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-icon delete" onclick="deleteAcademicYear('2026/2027')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Borrowings Section -->
         <div id="borrowings" class="tab-content" style="display: none;">
             <div class="glass-card">
@@ -1229,16 +1995,16 @@
                 <!-- Filter Tabs -->
                 <ul class="nav nav-tabs mb-3">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="filterBorrowings('all')">All</a>
+                        <a class="nav-link active" href="#" onclick="filterBorrowings('all', this)">All</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="filterBorrowings('active')">Active</a>
+                        <a class="nav-link" href="#" onclick="filterBorrowings('active', this)">Active</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="filterBorrowings('overdue')">Overdue</a>
+                        <a class="nav-link" href="#" onclick="filterBorrowings('overdue', this)">Overdue</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="filterBorrowings('returned')">Returned</a>
+                        <a class="nav-link" href="#" onclick="filterBorrowings('returned', this)">Returned</a>
                     </li>
                 </ul>
 
@@ -1265,8 +2031,8 @@
                             <td>-</td>
                             <td><span class="status-badge status-active">Active</span></td>
                             <td>
-                                <button class="btn-icon view" onclick="markAsReturned('B001')"><i class="fas fa-check"></i></button>
-                                <button class="btn-icon edit" onclick="extendDueDate('B001')"><i class="fas fa-clock"></i></button>
+                                <button class="btn-icon view" onclick="markAsReturned('B001')" title="Return"><i class="fas fa-check"></i></button>
+                                <button class="btn-icon edit" onclick="extendDueDate('B001')" title="Extend"><i class="fas fa-clock"></i></button>
                             </td>
                         </tr>
                         <tr class="table-row">
@@ -1278,8 +2044,8 @@
                             <td>-</td>
                             <td><span class="status-badge status-overdue">Overdue</span></td>
                             <td>
-                                <button class="btn-icon view" onclick="markAsReturned('B002')"><i class="fas fa-check"></i></button>
-                                <button class="btn-icon delete" onclick="sendOverdueNotice('B002')"><i class="fas fa-exclamation"></i></button>
+                                <button class="btn-icon view" onclick="markAsReturned('B002')" title="Return"><i class="fas fa-check"></i></button>
+                                <button class="btn-icon delete" onclick="sendOverdueNotice('B002')" title="Send Notice"><i class="fas fa-exclamation"></i></button>
                             </td>
                         </tr>
                         <tr class="table-row">
@@ -1291,7 +2057,7 @@
                             <td>2026-03-23</td>
                             <td><span class="status-badge status-returned">Returned</span></td>
                             <td>
-                                <button class="btn-icon view" onclick="viewDetails('B003')"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon view" onclick="viewDetails('B003')" title="View"><i class="fas fa-eye"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -1331,8 +2097,8 @@
                             <td>KSh 250</td>
                             <td><span class="status-badge status-pending">Unpaid</span></td>
                             <td>
-                                <button class="btn-icon view" onclick="markAsPaid(1)"><i class="fas fa-check"></i></button>
-                                <button class="btn-icon edit" onclick="waiveFine(1)"><i class="fas fa-times"></i></button>
+                                <button class="btn-icon view" onclick="markAsPaid(1)" title="Mark Paid"><i class="fas fa-check"></i></button>
+                                <button class="btn-icon edit" onclick="waiveFine(1)" title="Waive"><i class="fas fa-times"></i></button>
                             </td>
                         </tr>
                         <tr class="table-row">
@@ -1342,8 +2108,8 @@
                             <td>KSh 600</td>
                             <td><span class="status-badge status-pending">Unpaid</span></td>
                             <td>
-                                <button class="btn-icon view" onclick="markAsPaid(2)"><i class="fas fa-check"></i></button>
-                                <button class="btn-icon edit" onclick="waiveFine(2)"><i class="fas fa-times"></i></button>
+                                <button class="btn-icon view" onclick="markAsPaid(2)" title="Mark Paid"><i class="fas fa-check"></i></button>
+                                <button class="btn-icon edit" onclick="waiveFine(2)" title="Waive"><i class="fas fa-times"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -1471,6 +2237,197 @@
         </div>
     </div>
 
+    <!-- Add Program Modal -->
+    <div class="modal fade" id="addProgramModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-layer-group me-2"></i>Add New Program</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Program Code</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="e.g., BSC-CS">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Program Name</label>
+                            <input type="text" class="form-control form-control-custom" placeholder="e.g., Bachelor of Science in Computer Science">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Duration (Years)</label>
+                            <select class="form-select form-control-custom">
+                                <option>2 Years</option>
+                                <option>3 Years</option>
+                                <option>4 Years</option>
+                                <option>5 Years</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Program Coordinator</label>
+                            <select class="form-select form-control-custom">
+                                <option>Dr. Sarah Johnson</option>
+                                <option>Prof. Michael Chen</option>
+                                <option>Dr. Emily Brown</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control form-control-custom" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProgram()">Save Program</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Course Modal -->
+    <div class="modal fade" id="addCourseModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-book me-2"></i>Add New Course</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Code</label>
+                                <input type="text" class="form-control form-control-custom" placeholder="e.g., CSC301">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Title</label>
+                                <input type="text" class="form-control form-control-custom" placeholder="e.g., Data Structures">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Program</label>
+                                <select class="form-select form-control-custom">
+                                    <option>B.Sc. Computer Science</option>
+                                    <option>B.Sc. Information Technology</option>
+                                    <option>B.Sc. Software Engineering</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Year</label>
+                                <select class="form-select form-control-custom">
+                                    <option>Year 1</option>
+                                    <option>Year 2</option>
+                                    <option>Year 3</option>
+                                    <option>Year 4</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Semester</label>
+                                <select class="form-select form-control-custom">
+                                    <option>Semester 1</option>
+                                    <option>Semester 2</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Credits</label>
+                                <input type="number" class="form-control form-control-custom" min="1" max="6" value="3">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Course Description</label>
+                                <textarea class="form-control form-control-custom" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCourse()">Save Course</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div class="modal fade" id="assignmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>New Assignment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mb-3" id="assignmentModalTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#assignLecturer">Assign Lecturer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#enrollStudent">Enroll Student</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="assignLecturer">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Lecturer</label>
+                                    <select class="form-select form-control-custom">
+                                        <option>Dr. Sarah Johnson</option>
+                                        <option>Prof. Michael Chen</option>
+                                        <option>Dr. Emily Brown</option>
+                                        <option>Prof. David Wilson</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Course</label>
+                                    <select class="form-select form-control-custom">
+                                        <option>CSC301 - Data Structures</option>
+                                        <option>CSC305 - Database Systems</option>
+                                        <option>CSC310 - Operating Systems</option>
+                                        <option>CSC320 - Computer Networks</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Semester</label>
+                                    <select class="form-select form-control-custom">
+                                        <option>Semester 2, 2026 (Current)</option>
+                                        <option>Semester 1, 2027 (Upcoming)</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="enrollStudent">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Student</label>
+                                    <select class="form-select form-control-custom">
+                                        <option>John Doe (STU001) - CS Year 3</option>
+                                        <option>Mercy Wanjiku (STU042) - SE Year 2</option>
+                                        <option>James Otieno (STU089) - IT Year 3</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Course</label>
+                                    <select class="form-select form-control-custom" multiple size="3">
+                                        <option>CSC301 - Data Structures</option>
+                                        <option>CSC305 - Database Systems</option>
+                                        <option>CSC310 - Operating Systems</option>
+                                        <option>CSC320 - Computer Networks</option>
+                                        <option>CSC330 - Software Engineering</option>
+                                    </select>
+                                    <small class="text-muted">Hold Ctrl to select multiple courses</small>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAssignment()">Save Assignment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Initialize Charts
@@ -1533,6 +2490,16 @@
                     }
                 });
             }
+
+            // Initialize Bootstrap tabs for course management
+            var triggerTabList = [].slice.call(document.querySelectorAll('#courseTabs button'));
+            triggerTabList.forEach(function(triggerEl) {
+                var tabTrigger = new bootstrap.Tab(triggerEl);
+                triggerEl.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    tabTrigger.show();
+                });
+            });
         });
 
         // Tab Switching
@@ -1660,8 +2627,8 @@
             let rows = table.getElementsByTagName('tr');
             
             for (let row of rows) {
-                let nameCell = row.cells[1];
-                if (nameCell) {
+                if (row.cells && row.cells[1]) {
+                    let nameCell = row.cells[1];
                     let textValue = nameCell.textContent || nameCell.innerText;
                     if (textValue.toUpperCase().indexOf(filter) > -1) {
                         row.style.display = '';
@@ -1679,9 +2646,9 @@
             let rows = table.getElementsByTagName('tr');
             
             for (let row of rows) {
-                let titleCell = row.cells[1];
-                let authorCell = row.cells[2];
-                if (titleCell) {
+                if (row.cells && row.cells[1] && row.cells[2]) {
+                    let titleCell = row.cells[1];
+                    let authorCell = row.cells[2];
                     let titleText = titleCell.textContent || titleCell.innerText;
                     let authorText = authorCell.textContent || authorCell.innerText;
                     if (titleText.toUpperCase().indexOf(filter) > -1 || authorText.toUpperCase().indexOf(filter) > -1) {
@@ -1695,7 +2662,6 @@
 
         function filterByRole(role) {
             console.log('Filtering by role:', role);
-            // Implementation would filter table by role
         }
 
         function filterByStatus(status) {
@@ -1869,19 +2835,26 @@
             });
         }
 
-        function filterBorrowings(filter) {
+        function filterBorrowings(filter, element) {
             console.log('Filtering borrowings:', filter);
             // Update active tab
             document.querySelectorAll('.nav-tabs .nav-link').forEach(link => {
                 link.classList.remove('active');
             });
-            event.target.classList.add('active');
+            element.classList.add('active');
+        }
+
+        function viewDetails(id) {
+            Swal.fire({
+                title: 'Borrowing Details',
+                text: `Details for borrowing ${id}`,
+                icon: 'info'
+            });
         }
 
         function globalSearch(query) {
             if(query.length > 2) {
                 console.log('Searching for:', query);
-                // Implement global search
             }
         }
 
@@ -1916,7 +2889,339 @@
 
         function updateChart(period) {
             console.log('Updating chart for:', period);
-            // In real app, would fetch new data and update chart
+        }
+
+        // Course Management Functions
+        function addNewProgram() {
+            new bootstrap.Modal(document.getElementById('addProgramModal')).show();
+        }
+
+        function addNewCourse() {
+            new bootstrap.Modal(document.getElementById('addCourseModal')).show();
+        }
+
+        function addNewSemester() {
+            Swal.fire({
+                title: 'Add New Semester',
+                html: `
+                    <input type="text" class="swal2-input" placeholder="Semester (e.g., Semester 1)">
+                    <select class="swal2-select">
+                        <option>2025/2026</option>
+                        <option>2026/2027</option>
+                    </select>
+                    <input type="date" class="swal2-input" placeholder="Start Date">
+                    <input type="date" class="swal2-input" placeholder="End Date">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Add Semester'
+            });
+        }
+
+        function addAcademicYear() {
+            Swal.fire({
+                title: 'Add Academic Year',
+                html: `
+                    <input type="text" class="swal2-input" placeholder="e.g., 2026/2027">
+                    <input type="date" class="swal2-input" placeholder="Start Date">
+                    <input type="date" class="swal2-input" placeholder="End Date">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Add Year'
+            });
+        }
+
+        function openAssignmentModal() {
+            new bootstrap.Modal(document.getElementById('assignmentModal')).show();
+        }
+
+        function showAssignmentTab(tabId, element) {
+            document.querySelectorAll('.assignment-tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.getElementById(tabId).style.display = 'block';
+            
+            document.querySelectorAll('#assignmentSubTabs .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Program Functions
+        function editProgram(code) {
+            Swal.fire({
+                title: 'Edit Program',
+                text: `Editing program: ${code}`,
+                icon: 'info'
+            });
+        }
+
+        function viewProgram(code) {
+            Swal.fire({
+                title: 'Program Details',
+                html: `
+                    <p><strong>Code:</strong> ${code}</p>
+                    <p><strong>Name:</strong> B.Sc. Computer Science</p>
+                    <p><strong>Duration:</strong> 4 Years</p>
+                    <p><strong>Coordinator:</strong> Dr. Sarah Johnson</p>
+                    <p><strong>Total Students:</strong> 450</p>
+                    <p><strong>Total Courses:</strong> 42</p>
+                `,
+                icon: 'info'
+            });
+        }
+
+        function deleteProgram(code) {
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: `Delete program ${code}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete'
+            });
+        }
+
+        // Course Functions
+        function editCourse(code) {
+            Swal.fire({
+                title: 'Edit Course',
+                text: `Editing course: ${code}`,
+                icon: 'info'
+            });
+        }
+
+        function viewCourse(code) {
+            Swal.fire({
+                title: 'Course Details',
+                html: `
+                    <p><strong>Code:</strong> ${code}</p>
+                    <p><strong>Title:</strong> Data Structures & Algorithms</p>
+                    <p><strong>Program:</strong> B.Sc. CS</p>
+                    <p><strong>Year/Semester:</strong> Year 3, Sem 1</p>
+                    <p><strong>Credits:</strong> 4</p>
+                    <p><strong>Lecturer:</strong> Dr. Sarah Johnson</p>
+                    <p><strong>Students:</strong> 45</p>
+                `,
+                icon: 'info'
+            });
+        }
+
+        function deleteCourse(code) {
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: `Delete course ${code}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete'
+            });
+        }
+
+        // Filter Functions
+        function filterCourses() {
+            let input = document.getElementById('courseSearch');
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById('coursesTable');
+            let rows = table.getElementsByTagName('tr');
+            
+            for (let row of rows) {
+                if (row.cells && row.cells[1]) {
+                    let titleCell = row.cells[1];
+                    let textValue = titleCell.textContent || titleCell.innerText;
+                    if (textValue.toUpperCase().indexOf(filter) > -1) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        function filterByProgram(program) {
+            console.log('Filtering by program:', program);
+        }
+
+        function filterByYear(year) {
+            console.log('Filtering by year:', year);
+        }
+
+        function filterByLecturer(lecturer) {
+            console.log('Filtering by lecturer:', lecturer);
+        }
+
+        function filterBySemester(semester) {
+            console.log('Filtering by semester:', semester);
+        }
+
+        // Assignment Functions
+        function editAssignment(lecturerId) {
+            Swal.fire({
+                title: 'Edit Assignment',
+                text: `Modify courses for lecturer`,
+                icon: 'info'
+            });
+        }
+
+        function viewAssignment(lecturerId) {
+            Swal.fire({
+                title: 'Assignment Details',
+                text: `Viewing assignment details`,
+                icon: 'info'
+            });
+        }
+
+        function editEnrollment(studentId) {
+            Swal.fire({
+                title: 'Edit Enrollment',
+                text: `Modify courses for student ${studentId}`,
+                icon: 'info'
+            });
+        }
+
+        function viewEnrollment(studentId) {
+            Swal.fire({
+                title: 'Student Enrollment',
+                text: `Viewing enrollment for ${studentId}`,
+                icon: 'info'
+            });
+        }
+
+        // Semester Functions
+        function viewSemester(id) {
+            Swal.fire({
+                title: 'Semester Details',
+                text: `Viewing semester ${id}`,
+                icon: 'info'
+            });
+        }
+
+        function editSemester(id) {
+            Swal.fire({
+                title: 'Edit Semester',
+                text: `Editing semester ${id}`,
+                icon: 'info'
+            });
+        }
+
+        function deleteSemester(id) {
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: `Delete semester?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete'
+            });
+        }
+
+        // Academic Year Functions
+        function viewAcademicYear(year) {
+            Swal.fire({
+                title: 'Academic Year Details',
+                text: `Viewing ${year}`,
+                icon: 'info'
+            });
+        }
+
+        function editAcademicYear(year) {
+            Swal.fire({
+                title: 'Edit Academic Year',
+                text: `Editing ${year}`,
+                icon: 'info'
+            });
+        }
+
+        function deleteAcademicYear(year) {
+            Swal.fire({
+                title: 'Confirm Delete',
+                text: `Delete academic year ${year}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, delete'
+            });
+        }
+
+        // Bulk Operations
+        function bulkAssignStudents() {
+            Swal.fire({
+                title: 'Upload CSV',
+                text: 'Select file with student enrollments',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Upload'
+            });
+        }
+
+        function bulkAssignLecturers() {
+            Swal.fire({
+                title: 'Upload CSV',
+                text: 'Select file with lecturer assignments',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Upload'
+            });
+        }
+
+        // Save Functions
+        function saveProgram() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Program has been added successfully.',
+                icon: 'success',
+                timer: 1500
+            }).then(() => {
+                bootstrap.Modal.getInstance(document.getElementById('addProgramModal')).hide();
+            });
+        }
+
+        function saveCourse() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Course has been added successfully.',
+                icon: 'success',
+                timer: 1500
+            }).then(() => {
+                bootstrap.Modal.getInstance(document.getElementById('addCourseModal')).hide();
+            });
+        }
+
+        function saveAssignment() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Assignment has been saved.',
+                icon: 'success',
+                timer: 1500
+            }).then(() => {
+                bootstrap.Modal.getInstance(document.getElementById('assignmentModal')).hide();
+            });
+        }
+
+        function exportCourseData() {
+            Swal.fire({
+                title: 'Export Data',
+                text: 'Your file is being prepared for download.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function openQuickAction(type) {
+            Swal.fire({
+                title: 'Quick Action',
+                text: 'What would you like to do?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Add Course',
+                cancelButtonText: 'Add Program'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    addNewCourse();
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    addNewProgram();
+                }
+            });
         }
     </script>
 </body>

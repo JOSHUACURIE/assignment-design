@@ -5,9 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - EduLib</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
+        :root {
+            --pure-white: #ffffff;
+            --soft-white: #f8fafc;
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --forest-green: #16a34a;
+            --emerald-green: #10b981;
+            --light-green: #dcfce7;
+            --slate-gray: #334155;
+            --light-gray: #e2e8f0;
+            --warning-yellow: #fbbf24;
+            --danger-red: #ef4444;
+            --grade-a: #16a34a;
+            --grade-b: #2563eb;
+            --grade-c: #fbbf24;
+            --grade-d: #f97316;
+            --grade-f: #ef4444;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,64 +38,130 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f4f7fc;
+            background: var(--soft-white);
+            color: var(--slate-gray);
         }
 
-        /* Sidebar Styles */
+        /* Sidebar - Clean White with Blue/Green Accents */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             height: 100vh;
             width: 280px;
-            background: linear-gradient(180deg, #2c3e50 0%, #1a2634 100%);
-            color: white;
-            transition: all 0.3s;
+            background: var(--pure-white);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
             z-index: 1000;
+            border-right: 1px solid var(--light-gray);
         }
 
         .sidebar-header {
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .sidebar-header h3 {
+            background: linear-gradient(135deg, var(--primary-blue), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
         }
 
         .student-profile {
+            padding: 25px;
             text-align: center;
-            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
         }
 
         .student-avatar {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--light-blue), var(--light-green));
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 15px;
-            font-size: 2rem;
-            color: white;
+            border: 3px solid var(--pure-white);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
         }
 
-        .nav-link {
-            color: #a4b0be;
-            padding: 12px 25px;
-            margin: 5px 15px;
-            border-radius: 8px;
-            transition: all 0.3s;
+        .student-avatar i {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .student-badge {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            padding: 20px 15px;
+        }
+
+        .nav-link-custom {
             display: flex;
             align-items: center;
+            padding: 12px 20px;
+            color: var(--slate-gray);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
         }
 
-        .nav-link i {
-            width: 25px;
+        .nav-link-custom i {
+            width: 30px;
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            transition: all 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background: #4facfe;
-            color: white;
+        .nav-link-custom:hover {
+            background: var(--light-blue);
             transform: translateX(5px);
+        }
+
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--pure-white);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .nav-link-custom.active i {
+            color: var(--pure-white);
+        }
+
+        .logout-link {
+            margin-top: 30px;
+            color: var(--danger-red);
+        }
+
+        .logout-link i {
+            color: var(--danger-red);
+        }
+
+        .logout-link:hover {
+            background: #fee2e2;
         }
 
         /* Main Content */
@@ -84,21 +172,141 @@
 
         /* Top Bar */
         .top-bar {
-            background: white;
-            padding: 15px 30px;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 20px 30px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid var(--light-gray);
         }
 
-        /* Search Section */
+        .welcome-text h2 {
+            font-weight: 700;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .notification-badge {
+            position: relative;
+        }
+
+        .notification-badge .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--forest-green));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.blue {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .stat-icon.green {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .stat-icon.red {
+            background: #fee2e2;
+            color: var(--danger-red);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Search Container */
         .search-container {
             position: relative;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 100%;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.2rem;
         }
 
         .live-results {
@@ -106,96 +314,310 @@
             top: 100%;
             left: 0;
             right: 0;
-            background: white;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: var(--pure-white);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             display: none;
             max-height: 300px;
             overflow-y: auto;
+            border: 1px solid var(--light-gray);
+            border-top: none;
         }
 
         .result-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-gray);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .result-item:hover {
-            background: #f8f9fa;
+            background: var(--light-blue);
         }
 
-        /* Cards */
-        .stat-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            transition: transform 0.3s;
+        .result-item strong {
+            color: var(--slate-gray);
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .result-item small {
+            color: #64748b;
         }
 
         /* Book Cards */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
         .book-card {
-            background: white;
-            border-radius: 15px;
+            background: var(--pure-white);
+            border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            border: 1px solid var(--light-gray);
             transition: all 0.3s;
+            position: relative;
         }
 
         .book-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
         }
 
         .book-cover {
             width: 100%;
             height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--light-blue), var(--light-green));
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 3rem;
             margin-bottom: 15px;
+        }
+
+        .book-cover i {
+            font-size: 4rem;
+            color: var(--primary-blue);
+        }
+
+        .book-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--slate-gray);
+        }
+
+        .book-author {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
 
         .availability-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-available {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: var(--danger-red);
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            background: var(--light-gray);
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue), var(--forest-green));
+            border-radius: 10px;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--light-gray);
+            overflow-x: auto;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .table-custom th {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 15px;
+            background: var(--soft-white);
+            border-radius: 12px;
+        }
+
+        .table-custom td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .table-row {
+            transition: all 0.3s;
+        }
+
+        .table-row:hover {
+            background: var(--light-blue);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-overdue {
+            background: #fee2e2;
+            color: var(--danger-red);
+        }
+
+        .status-returned {
+            background: var(--light-blue);
+            color: var(--primary-blue);
         }
 
         /* Result Slip */
         .result-slip {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--light-gray);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
         .result-header {
-            border-bottom: 2px solid #4facfe;
+            border-bottom: 2px solid var(--primary-blue);
             padding-bottom: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        .grade-A { color: #2ecc71; }
-        .grade-B { color: #3498db; }
-        .grade-C { color: #f39c12; }
-        .grade-D { color: #e67e22; }
-        .grade-F { color: #e74c3c; }
+        .result-header h4 {
+            font-weight: 800;
+            color: var(--slate-gray);
+        }
 
-        /* Modal */
-        .modal-book-details {
+        .grade-A { color: var(--grade-a); font-weight: 700; }
+        .grade-B { color: var(--grade-b); font-weight: 700; }
+        .grade-C { color: var(--grade-c); font-weight: 700; }
+        .grade-D { color: var(--grade-d); font-weight: 700; }
+        .grade-F { color: var(--grade-f); font-weight: 700; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            background: var(--soft-white);
             padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            min-width: 180px;
+            background: var(--pure-white);
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-outline-custom {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            color: var(--slate-gray);
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-custom:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -280px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -204,116 +626,112 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <h3><i class="fas fa-graduation-cap me-2"></i>EduLib</h3>
-            <p>Student Portal</p>
         </div>
         
         <div class="student-profile">
             <div class="student-avatar">
                 <i class="fas fa-user-graduate"></i>
             </div>
-            <h5>John Doe</h5>
-            <p class="text-muted small">Computer Science - Year 2</p>
-            <span class="badge bg-info">STU001</span>
+            <h5 class="student-name">John Doe</h5>
+            <span class="student-badge">STU001</span>
+            <p class="text-muted small mt-2">Computer Science - Year 2</p>
         </div>
-        
-        <nav class="nav flex-column">
-            <a class="nav-link active" href="#" onclick="showSection('dashboard')">
-                <i class="fas fa-home me-3"></i> Dashboard
+
+        <div class="nav-links">
+            <a href="#" class="nav-link-custom active" onclick="switchTab('dashboard', this)">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
             </a>
-            <a class="nav-link" href="#" onclick="showSection('mycourses')">
-                <i class="fas fa-book-open me-3"></i> My Courses
+            <a href="#" class="nav-link-custom" onclick="switchTab('courses', this)">
+                <i class="fas fa-book-open"></i>
+                <span>My Courses</span>
             </a>
-            <a class="nav-link" href="#" onclick="showSection('borrowed')">
-                <i class="fas fa-book me-3"></i> Borrowed Books
+            <a href="#" class="nav-link-custom" onclick="switchTab('borrowed', this)">
+                <i class="fas fa-book"></i>
+                <span>Borrowed Books</span>
             </a>
-            <a class="nav-link" href="#" onclick="showSection('reserve')">
-                <i class="fas fa-calendar-check me-3"></i> Reserve Books
+            <a href="#" class="nav-link-custom" onclick="switchTab('reserve', this)">
+                <i class="fas fa-calendar-check"></i>
+                <span>Reserve Books</span>
             </a>
-            <a class="nav-link" href="#" onclick="showSection('results')">
-                <i class="fas fa-chart-line me-3"></i> My Results
+            <a href="#" class="nav-link-custom" onclick="switchTab('results', this)">
+                <i class="fas fa-chart-line"></i>
+                <span>My Results</span>
             </a>
-            <a class="nav-link" href="#" onclick="showSection('library')">
-                <i class="fas fa-search me-3"></i> Library Catalog
+            <a href="#" class="nav-link-custom" onclick="switchTab('library', this)">
+                <i class="fas fa-search"></i>
+                <span>Library Catalog</span>
             </a>
-            <hr class="mx-3 text-secondary">
-            <a class="nav-link text-danger" href="index.html">
-                <i class="fas fa-sign-out-alt me-3"></i> Logout
+            <a href="#" class="nav-link-custom" onclick="switchTab('fines', this)">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Fines & Dues</span>
             </a>
-        </nav>
+            <hr>
+            <a href="index.html" class="nav-link-custom logout-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Top Bar -->
         <div class="top-bar">
-            <div>
-                <h4 class="mb-0">Welcome back, John!</h4>
-                <small class="text-muted">Next due date: 25th March 2024</small>
+            <div class="welcome-text">
+                <h2>Welcome back, John! 👋</h2>
+                <p><i class="far fa-calendar-alt me-2 text-primary"></i>Monday, March 2, 2026 | Semester 2</p>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <span class="badge bg-success">Active Semester</span>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown">
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-success px-3 py-2">Active Semester</span>
+                <div class="notification-badge">
+                    <button class="btn btn-light position-relative" onclick="viewNotifications()">
                         <i class="fas fa-bell"></i>
-                        <span class="badge bg-danger">2</span>
+                        <span class="badge bg-danger">3</span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Dashboard Section -->
-        <div id="dashboard-section">
-            <div class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h3>5</h3>
-                                <p class="text-muted mb-0">Enrolled Courses</p>
-                            </div>
-                            <div class="bg-soft-primary p-3 rounded">
-                                <i class="fas fa-book-open fa-2x text-primary"></i>
-                            </div>
-                        </div>
+        <div id="dashboard" class="tab-content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-book-open"></i>
                     </div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Enrolled Courses</div>
+                    <small class="text-success mt-2 d-block"><i class="fas fa-check-circle"></i> All active</small>
                 </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h3>3</h3>
-                                <p class="text-muted mb-0">Books Borrowed</p>
-                            </div>
-                            <div class="bg-soft-success p-3 rounded">
-                                <i class="fas fa-book fa-2x text-success"></i>
-                            </div>
-                        </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-book"></i>
                     </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Books Borrowed</div>
+                    <small class="text-info mt-2 d-block">2 due this week</small>
                 </div>
-                <div class="col-md-4">
-                    <div class="stat-card">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h3>1</h3>
-                                <p class="text-muted mb-0">Overdue Books</p>
-                            </div>
-                            <div class="bg-soft-danger p-3 rounded">
-                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
-                            </div>
-                        </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i class="fas fa-exclamation-circle"></i>
                     </div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Overdue Books</div>
+                    <small class="text-danger mt-2 d-block">Fine: KSh 50</small>
                 </div>
             </div>
 
             <!-- Quick Search -->
             <div class="stat-card mb-4">
-                <h5 class="mb-3">Quick Book Search</h5>
+                <h5 class="mb-3"><i class="fas fa-search text-primary me-2"></i>Quick Book Search</h5>
                 <div class="search-container">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
-                        <input type="text" id="bookSearch" class="form-control" placeholder="Search by title or author..." onkeyup="handleSearch()">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="bookSearch" placeholder="Search by title, author, or ISBN..." onkeyup="handleSearch()">
                     </div>
                     <div id="searchResults" class="live-results"></div>
                 </div>
@@ -321,176 +739,379 @@
 
             <!-- Currently Reading -->
             <div class="stat-card">
-                <h5 class="mb-3">Currently Reading</h5>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="book-card position-relative">
-                            <span class="badge bg-warning availability-badge">Due in 3 days</span>
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Introduction to Algorithms</h6>
-                            <p class="text-muted small">Cormen et al.</p>
-                            <div class="progress mb-2">
-                                <div class="progress-bar" style="width: 60%">60%</div>
-                            </div>
-                            <small>Return by: 25 Mar 2024</small>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-clock text-primary me-2"></i>Currently Reading</h5>
+                  <a href="#" onclick="switchTab('borrowed', document.querySelector('[onclick*=\'borrowed\']'))" class="text-primary">View All</a>
+                </div>
+                
+                <div class="books-grid">
+                    <div class="book-card">
+                        <span class="availability-badge badge-warning">Due in 3 days</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Introduction to Algorithms</h6>
+                        <p class="book-author">Cormen et al.</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small>60% complete</small>
+                            <small class="text-danger">Due: 25 Mar</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="book-card position-relative">
-                            <span class="badge bg-success availability-badge">Available</span>
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Database Systems</h6>
-                            <p class="text-muted small">Silberschatz</p>
-                            <div class="progress mb-2">
-                                <div class="progress-bar" style="width: 30%">30%</div>
-                            </div>
-                            <small>Return by: 30 Mar 2024</small>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">Available</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Database Systems</h6>
+                        <p class="book-author">Silberschatz</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small>30% complete</small>
+                            <small class="text-success">Due: 30 Mar</small>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="book-card position-relative">
-                            <span class="badge bg-danger availability-badge">Overdue</span>
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Computer Networks</h6>
-                            <p class="text-muted small">Tanenbaum</p>
-                            <div class="progress mb-2">
-                                <div class="progress-bar" style="width: 100%">100%</div>
-                            </div>
-                            <small>Overdue by: 5 days</small>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-danger">Overdue</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Computer Networks</h6>
+                        <p class="book-author">Tanenbaum</p>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small>100% complete</small>
+                            <small class="text-danger">Overdue: 5 days</small>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Courses Section -->
+        <div id="courses" class="tab-content" style="display: none;">
+            <div class="stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-book-open text-primary me-2"></i>My Enrolled Courses</h5>
+                    <span class="badge bg-primary">Semester 2, 2026</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Title</th>
+                                <th>Lecturer</th>
+                                <th>Schedule</th>
+                                <th>Attendance</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td><strong>CSC301</strong></td>
+                                <td>Data Structures & Algorithms</td>
+                                <td>Dr. Sarah Johnson</td>
+                                <td>Mon/Wed 10:00 AM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">85%</span>
+                                        <div class="progress flex-grow-1" style="height: 5px;">
+                                            <div class="progress-bar" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewCourse('CSC301')">View</button></td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>CSC305</strong></td>
+                                <td>Database Systems</td>
+                                <td>Prof. Michael Chen</td>
+                                <td>Tue/Thu 2:00 PM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">78%</span>
+                                        <div class="progress flex-grow-1" style="height: 5px;">
+                                            <div class="progress-bar" style="width: 78%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewCourse('CSC305')">View</button></td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>CSC310</strong></td>
+                                <td>Operating Systems</td>
+                                <td>Dr. Emily Brown</td>
+                                <td>Mon/Wed 2:00 PM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">92%</span>
+                                        <div class="progress flex-grow-1" style="height: 5px;">
+                                            <div class="progress-bar" style="width: 92%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewCourse('CSC310')">View</button></td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>CSC320</strong></td>
+                                <td>Computer Networks</td>
+                                <td>Prof. David Wilson</td>
+                                <td>Fri 9:00 AM - 12:00 PM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">70%</span>
+                                        <div class="progress flex-grow-1" style="height: 5px;">
+                                            <div class="progress-bar" style="width: 70%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewCourse('CSC320')">View</button></td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>CSC330</strong></td>
+                                <td>Software Engineering</td>
+                                <td>Dr. Lisa Anderson</td>
+                                <td>Tue/Thu 10:00 AM</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">88%</span>
+                                        <div class="progress flex-grow-1" style="height: 5px;">
+                                            <div class="progress-bar" style="width: 88%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td><button class="btn btn-sm btn-outline-primary" onclick="viewCourse('CSC330')">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Borrowed Books Section -->
-        <div id="borrowed-section" style="display: none;">
+        <div id="borrowed" class="tab-content" style="display: none;">
             <div class="stat-card">
-                <h5 class="mb-3">My Borrowed Books</h5>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Book Title</th>
-                            <th>Author</th>
-                            <th>Borrowed Date</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Introduction to Algorithms</td>
-                            <td>Cormen et al.</td>
-                            <td>10 Mar 2024</td>
-                            <td>25 Mar 2024</td>
-                            <td><span class="badge bg-warning">Pending</span></td>
-                            <td><button class="btn btn-sm btn-primary">Renew</button></td>
-                        </tr>
-                        <tr>
-                            <td>Database Systems</td>
-                            <td>Silberschatz</td>
-                            <td>15 Mar 2024</td>
-                            <td>30 Mar 2024</td>
-                            <td><span class="badge bg-success">Active</span></td>
-                            <td><button class="btn btn-sm btn-primary">Renew</button></td>
-                        </tr>
-                        <tr>
-                            <td>Computer Networks</td>
-                            <td>Tanenbaum</td>
-                            <td>05 Mar 2024</td>
-                            <td>20 Mar 2024</td>
-                            <td><span class="badge bg-danger">Overdue</span></td>
-                            <td><button class="btn btn-sm btn-danger">Return Now</button></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="card-header d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-book text-primary me-2"></i>My Borrowed Books</h5>
+                    <span class="badge bg-primary">3 Active Loans</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>Book Title</th>
+                                <th>Author</th>
+                                <th>Borrowed Date</th>
+                                <th>Due Date</th>
+                                <th>Days Left</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td><strong>Introduction to Algorithms</strong></td>
+                                <td>Cormen et al.</td>
+                                <td>10 Mar 2026</td>
+                                <td>25 Mar 2026</td>
+                                <td><span class="text-warning fw-bold">3 days</span></td>
+                                <td><span class="status-badge status-pending">Due Soon</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="renewBook('Introduction to Algorithms')">Renew</button>
+                                    <button class="btn btn-sm btn-outline-success" onclick="returnBook('Introduction to Algorithms')">Return</button>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>Database Systems</strong></td>
+                                <td>Silberschatz</td>
+                                <td>15 Mar 2026</td>
+                                <td>30 Mar 2026</td>
+                                <td><span class="text-success fw-bold">8 days</span></td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="renewBook('Database Systems')">Renew</button>
+                                    <button class="btn btn-sm btn-outline-success" onclick="returnBook('Database Systems')">Return</button>
+                                </td>
+                            </tr>
+                            <tr class="table-row">
+                                <td><strong>Computer Networks</strong></td>
+                                <td>Tanenbaum</td>
+                                <td>05 Mar 2026</td>
+                                <td>20 Mar 2026</td>
+                                <td><span class="text-danger fw-bold">-5 days</span></td>
+                                <td><span class="status-badge status-overdue">Overdue</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger" onclick="returnBook('Computer Networks')">Return Now</button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="payFine('Computer Networks')">Pay Fine</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- Reserve Books Section -->
-        <div id="reserve-section" style="display: none;">
+        <div id="reserve" class="tab-content" style="display: none;">
             <div class="stat-card">
-                <h5 class="mb-3">Reserve a Book</h5>
-                
-                <!-- Reservation Form -->
+                <div class="card-header d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-calendar-check text-primary me-2"></i>Reserve Books</h5>
+                </div>
+
+                <!-- Search Form -->
                 <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label">Search Book to Reserve</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter book title or ISBN" id="reserveSearch">
-                            <button class="btn btn-primary" onclick="searchForReservation()">Search</button>
+                    <div class="col-md-8">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="reserveSearch" placeholder="Search for books to reserve..." onkeyup="searchReservations()">
                         </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="filter-select w-100" onchange="filterReservations(this.value)">
+                            <option value="all">All Categories</option>
+                            <option value="available">Available Now</option>
+                            <option value="unavailable">Unavailable</option>
+                            <option value="myreserves">My Reservations</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Available Books for Reservation -->
-                <div class="row" id="availableBooks">
-                    <div class="col-md-4">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Clean Code</h6>
-                            <p class="text-muted">Robert Martin</p>
-                            <p><span class="badge bg-success">2 copies available</span></p>
-                            <button class="btn btn-sm btn-outline-primary w-100" onclick="reserveBook('Clean Code')">
-                                Reserve
-                            </button>
+                <!-- Available Books -->
+                <h6 class="mb-3">Available for Reservation</h6>
+                <div class="books-grid">
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">2 copies</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
                         </div>
+                        <h6 class="book-title">Clean Code</h6>
+                        <p class="book-author">Robert Martin</p>
+                        <p class="text-success small"><i class="fas fa-check-circle"></i> Available now</p>
+                        <button class="btn btn-primary-custom w-100" onclick="reserveBook('Clean Code')">
+                            <i class="fas fa-calendar-check me-2"></i>Reserve
+                        </button>
                     </div>
-                    <div class="col-md-4">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Design Patterns</h6>
-                            <p class="text-muted">GoF</p>
-                            <p><span class="badge bg-warning">1 copy available</span></p>
-                            <button class="btn btn-sm btn-outline-primary w-100" onclick="reserveBook('Design Patterns')">
-                                Reserve
-                            </button>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">1 copy</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
                         </div>
+                        <h6 class="book-title">Design Patterns</h6>
+                        <p class="book-author">GoF</p>
+                        <p class="text-success small"><i class="fas fa-check-circle"></i> Available now</p>
+                        <button class="btn btn-primary-custom w-100" onclick="reserveBook('Design Patterns')">
+                            <i class="fas fa-calendar-check me-2"></i>Reserve
+                        </button>
                     </div>
-                    <div class="col-md-4">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Python Programming</h6>
-                            <p class="text-muted">Lutz</p>
-                            <p><span class="badge bg-danger">No copies available</span></p>
-                            <button class="btn btn-sm btn-outline-warning w-100" onclick="addToWaitlist('Python Programming')">
-                                Join Waitlist
-                            </button>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-danger">0 copies</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
                         </div>
+                        <h6 class="book-title">Python Programming</h6>
+                        <p class="book-author">Lutz</p>
+                        <p class="text-danger small"><i class="fas fa-times-circle"></i> Currently unavailable</p>
+                        <button class="btn btn-outline-warning w-100" onclick="joinWaitlist('Python Programming')">
+                            <i class="fas fa-clock me-2"></i>Join Waitlist
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">3 copies</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">JavaScript: The Good Parts</h6>
+                        <p class="book-author">Douglas Crockford</p>
+                        <p class="text-success small"><i class="fas fa-check-circle"></i> Available now</p>
+                        <button class="btn btn-primary-custom w-100" onclick="reserveBook('JavaScript: The Good Parts')">
+                            <i class="fas fa-calendar-check me-2"></i>Reserve
+                        </button>
+                    </div>
+                </div>
+
+                <!-- My Active Reservations -->
+                <div class="mt-5">
+                    <h6 class="mb-3">My Active Reservations</h6>
+                    <div class="table-container">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Reserved On</th>
+                                    <th>Expected Availability</th>
+                                    <th>Queue Position</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td><strong>The Pragmatic Programmer</strong></td>
+                                    <td>25 Feb 2026</td>
+                                    <td>05 Apr 2026</td>
+                                    <td><span class="badge bg-warning">#3</span></td>
+                                    <td><span class="status-badge status-pending">Waiting</span></td>
+                                    <td><button class="btn btn-sm btn-outline-danger" onclick="cancelReservation('The Pragmatic Programmer')">Cancel</button></td>
+                                </tr>
+                                <tr class="table-row">
+                                    <td><strong>Clean Architecture</strong></td>
+                                    <td>28 Feb 2026</td>
+                                    <td>10 Apr 2026</td>
+                                    <td><span class="badge bg-warning">#2</span></td>
+                                    <td><span class="status-badge status-pending">Waiting</span></td>
+                                    <td><button class="btn btn-sm btn-outline-danger" onclick="cancelReservation('Clean Architecture')">Cancel</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Results Section -->
-        <div id="results-section" style="display: none;">
+        <div id="results" class="tab-content" style="display: none;">
             <div class="result-slip">
                 <div class="result-header text-center">
                     <h4>ACADEMIC RESULTS SLIP</h4>
-                    <p>Spring Semester 2024</p>
+                    <p class="text-muted">Spring Semester 2026</p>
                 </div>
                 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <p><strong>Student Name:</strong> John Doe</p>
-                        <p><strong>Registration No:</strong> STU001</p>
+                <div class="info-grid">
+                    <div>
+                        <p class="text-muted mb-1">Student Name</p>
+                        <p class="fw-bold">John Doe</p>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Programme:</strong> B.Sc. Computer Science</p>
-                        <p><strong>Year of Study:</strong> Year 2</p>
+                    <div>
+                        <p class="text-muted mb-1">Registration No.</p>
+                        <p class="fw-bold">STU001</p>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Programme</p>
+                        <p class="fw-bold">B.Sc. Computer Science</p>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-1">Year of Study</p>
+                        <p class="fw-bold">Year 2</p>
                     </div>
                 </div>
 
@@ -511,40 +1132,40 @@
                             <td>Data Structures & Algorithms</td>
                             <td>25</td>
                             <td>58</td>
-                            <td>83</td>
-                            <td class="grade-A fw-bold">A</td>
+                            <td><strong>83</strong></td>
+                            <td class="grade-A">A</td>
                         </tr>
                         <tr>
                             <td>CSC305</td>
                             <td>Database Systems</td>
                             <td>22</td>
                             <td>62</td>
-                            <td>84</td>
-                            <td class="grade-A fw-bold">A</td>
+                            <td><strong>84</strong></td>
+                            <td class="grade-A">A</td>
                         </tr>
                         <tr>
                             <td>CSC310</td>
                             <td>Operating Systems</td>
                             <td>18</td>
                             <td>45</td>
-                            <td>63</td>
-                            <td class="grade-B fw-bold">B</td>
+                            <td><strong>63</strong></td>
+                            <td class="grade-B">B</td>
                         </tr>
                         <tr>
                             <td>CSC320</td>
                             <td>Computer Networks</td>
                             <td>20</td>
                             <td>42</td>
-                            <td>62</td>
-                            <td class="grade-B fw-bold">B</td>
+                            <td><strong>62</strong></td>
+                            <td class="grade-B">B</td>
                         </tr>
                         <tr>
                             <td>CSC330</td>
                             <td>Software Engineering</td>
                             <td>28</td>
                             <td>65</td>
-                            <td>93</td>
-                            <td class="grade-A fw-bold">A</td>
+                            <td><strong>93</strong></td>
+                            <td class="grade-A">A</td>
                         </tr>
                     </tbody>
                     <tfoot class="table-light">
@@ -555,8 +1176,11 @@
                     </tfoot>
                 </table>
 
-                <div class="mt-4 text-end">
-                    <button class="btn btn-primary" onclick="printResultSlip()">
+                <div class="mt-4 d-flex justify-content-end gap-3">
+                    <button class="btn-outline-custom" onclick="downloadResults()">
+                        <i class="fas fa-download me-2"></i>Download PDF
+                    </button>
+                    <button class="btn-primary-custom" onclick="printResultSlip()">
                         <i class="fas fa-print me-2"></i>Print Result Slip
                     </button>
                 </div>
@@ -564,74 +1188,225 @@
         </div>
 
         <!-- Library Catalog Section -->
-        <div id="library-section" style="display: none;">
+        <div id="library" class="tab-content" style="display: none;">
             <div class="stat-card">
-                <h5 class="mb-3">Library Catalog</h5>
-                
+                <div class="card-header d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-search text-primary me-2"></i>Library Catalog</h5>
+                </div>
+
                 <!-- Advanced Search -->
                 <div class="row mb-4">
-                    <div class="col-md-8">
-                        <div class="input-group">
-                            <input type="text" id="catalogSearch" class="form-control" placeholder="Search by title, author, ISBN..." onkeyup="searchCatalog()">
-                            <button class="btn btn-primary" type="button">Search</button>
+                    <div class="col-md-6">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="catalogSearch" placeholder="Search by title, author, or ISBN..." onkeyup="searchCatalog()">
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <select class="form-select" onchange="filterCatalog(this.value)">
+                    <div class="col-md-3">
+                        <select class="filter-select w-100" onchange="filterByCategory(this.value)">
                             <option value="all">All Categories</option>
                             <option value="programming">Programming</option>
                             <option value="database">Database</option>
                             <option value="networking">Networking</option>
+                            <option value="ai">AI & ML</option>
+                            <option value="web">Web Development</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="filter-select w-100" onchange="filterByAvailability(this.value)">
+                            <option value="all">All Books</option>
+                            <option value="available">Available Only</option>
+                            <option value="ebook">E-Books</option>
                         </select>
                     </div>
                 </div>
 
                 <!-- Catalog Results -->
-                <div class="row" id="catalogResults">
-                    <div class="col-md-3">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
+                <div class="books-grid" id="catalogResults">
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">Available: 3</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">The C Programming Language</h6>
+                        <p class="book-author">Kernighan & Ritchie</p>
+                        <p class="text-muted small">ISBN: 978-0-13-110362-7</p>
+                        <button class="btn btn-outline-primary w-100" onclick="viewBookDetails('The C Programming Language')">
+                            View Details
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-warning">Available: 1</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Java: The Complete Reference</h6>
+                        <p class="book-author">Herbert Schildt</p>
+                        <p class="text-muted small">ISBN: 978-0-07-180855-2</p>
+                        <button class="btn btn-outline-primary w-100" onclick="viewBookDetails('Java: The Complete Reference')">
+                            View Details
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-danger">Available: 0</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Python Crash Course</h6>
+                        <p class="book-author">Eric Matthes</p>
+                        <p class="text-muted small">ISBN: 978-1-59327-603-4</p>
+                        <button class="btn btn-outline-warning w-100" onclick="reserveBook('Python Crash Course')">
+                            Reserve
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">Available: 2</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Database Design</h6>
+                        <p class="book-author">Thomas Connolly</p>
+                        <p class="text-muted small">ISBN: 978-0-321-49651-8</p>
+                        <button class="btn btn-outline-primary w-100" onclick="viewBookDetails('Database Design')">
+                            View Details
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">Available: 4</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">Clean Code</h6>
+                        <p class="book-author">Robert Martin</p>
+                        <p class="text-muted small">ISBN: 978-0-13-235088-4</p>
+                        <button class="btn btn-outline-primary w-100" onclick="viewBookDetails('Clean Code')">
+                            View Details
+                        </button>
+                    </div>
+
+                    <div class="book-card">
+                        <span class="availability-badge badge-available">Available: 2</span>
+                        <div class="book-cover">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h6 class="book-title">JavaScript: The Good Parts</h6>
+                        <p class="book-author">Douglas Crockford</p>
+                        <p class="text-muted small">ISBN: 978-0-596-51774-8</p>
+                        <button class="btn btn-outline-primary w-100" onclick="viewBookDetails('JavaScript: The Good Parts')">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <small class="text-muted">Showing 1-6 of 124 books</small>
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fines Section -->
+        <div id="fines" class="tab-content" style="display: none;">
+            <div class="stat-card">
+                <div class="card-header d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0"><i class="fas fa-money-bill-wave text-primary me-2"></i>Fines & Dues</h5>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="stat-card small">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <small class="text-muted">Total Fines</small>
+                                    <h3 class="text-danger">KSh 250</h3>
+                                </div>
+                                <i class="fas fa-exclamation-triangle text-danger fa-2x"></i>
                             </div>
-                            <h6>The C Programming Language</h6>
-                            <p class="text-muted">K&R</p>
-                            <p><span class="badge bg-success">Available: 3</span></p>
-                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
+                    <div class="col-md-4">
+                        <div class="stat-card small">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <small class="text-muted">Paid</small>
+                                    <h3 class="text-success">KSh 0</h3>
+                                </div>
+                                <i class="fas fa-check-circle text-success fa-2x"></i>
                             </div>
-                            <h6>Java: The Complete Reference</h6>
-                            <p class="text-muted">Schildt</p>
-                            <p><span class="badge bg-warning">Available: 1</span></p>
-                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
+                    <div class="col-md-4">
+                        <div class="stat-card small">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <small class="text-muted">Outstanding</small>
+                                    <h3 class="text-warning">KSh 250</h3>
+                                </div>
+                                <i class="fas fa-clock text-warning fa-2x"></i>
                             </div>
-                            <h6>Python Crash Course</h6>
-                            <p class="text-muted">Matthes</p>
-                            <p><span class="badge bg-danger">Available: 0</span></p>
-                            <button class="btn btn-sm btn-outline-warning w-100">Reserve</button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="book-card">
-                            <div class="book-cover">
-                                <i class="fas fa-book"></i>
-                            </div>
-                            <h6>Database Design</h6>
-                            <p class="text-muted">Connolly</p>
-                            <p><span class="badge bg-success">Available: 2</span></p>
-                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
-                        </div>
-                    </div>
+                </div>
+
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Due Date</th>
+                            <th>Days Overdue</th>
+                            <th>Fine Rate</th>
+                            <th>Total Fine</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row">
+                            <td><strong>Computer Networks</strong></td>
+                            <td>20 Mar 2026</td>
+                            <td><span class="text-danger fw-bold">5 days</span></td>
+                            <td>KSh 10/day</td>
+                            <td>KSh 50</td>
+                            <td><span class="status-badge status-overdue">Unpaid</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="payFine('Computer Networks')">
+                                    Pay Now
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td><strong>Operating Systems</strong></td>
+                            <td>15 Mar 2026</td>
+                            <td><span class="text-danger fw-bold">10 days</span></td>
+                            <td>KSh 20/day</td>
+                            <td>KSh 200</td>
+                            <td><span class="status-badge status-overdue">Unpaid</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="payFine('Operating Systems')">
+                                    Pay Now
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <button class="btn-primary-custom" onclick="payAllFines()">
+                        <i class="fas fa-credit-card me-2"></i>Pay All Fines
+                    </button>
                 </div>
             </div>
         </div>
@@ -641,9 +1416,9 @@
     <div class="modal fade" id="bookDetailsModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Book Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-book me-2"></i>Book Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="bookDetailsContent">
                     <!-- Dynamic content will be loaded here -->
@@ -658,25 +1433,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function showSection(section) {
-            // Hide all sections
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('mycourses-section').style.display = 'none';
-            document.getElementById('borrowed-section').style.display = 'none';
-            document.getElementById('reserve-section').style.display = 'none';
-            document.getElementById('results-section').style.display = 'none';
-            document.getElementById('library-section').style.display = 'none';
+        // Tab Switching
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
             
-            // Show selected section
-            document.getElementById(section + '-section').style.display = 'block';
+            document.getElementById(tabId).style.display = 'block';
             
-            // Update active nav link
-            document.querySelectorAll('.nav-link').forEach(link => {
+            document.querySelectorAll('.nav-link-custom').forEach(link => {
                 link.classList.remove('active');
             });
-            event.target.closest('.nav-link').classList.add('active');
+            element.classList.add('active');
         }
 
+        // Search Functions
         function handleSearch() {
             let query = document.getElementById('bookSearch').value;
             let resultsBox = document.getElementById('searchResults');
@@ -696,6 +1467,10 @@
                         <strong>Computer Networks</strong><br>
                         <small>by Tanenbaum - Available: 0 copies (Reservable)</small>
                     </div>
+                    <div class="result-item" onclick="selectBook('Clean Code')">
+                        <strong>Clean Code</strong><br>
+                        <small>by Robert Martin - Available: 2 copies</small>
+                    </div>
                 `;
             } else {
                 resultsBox.style.display = 'none';
@@ -710,50 +1485,262 @@
 
         function showBookDetails(title) {
             let content = `
-                <h6>${title}</h6>
-                <p><strong>ISBN:</strong> 978-0-13-110362-7</p>
-                <p><strong>Edition:</strong> 3rd</p>
-                <p><strong>Year:</strong> 2009</p>
-                <p><strong>Available Copies:</strong> 2</p>
-                <p><strong>Total Copies:</strong> 5</p>
-                <p><strong>Location:</strong> Section A, Shelf 3</p>
+                <h5 class="mb-3">${title}</h5>
+                <p><i class="fas fa-barcode text-primary me-2"></i><strong>ISBN:</strong> 978-0-13-110362-7</p>
+                <p><i class="fas fa-user text-primary me-2"></i><strong>Author:</strong> Multiple Authors</p>
+                <p><i class="fas fa-layer-group text-primary me-2"></i><strong>Edition:</strong> 3rd</p>
+                <p><i class="fas fa-calendar text-primary me-2"></i><strong>Year:</strong> 2009</p>
+                <p><i class="fas fa-copy text-primary me-2"></i><strong>Available Copies:</strong> <span class="text-success">2</span></p>
+                <p><i class="fas fa-copy text-primary me-2"></i><strong>Total Copies:</strong> 5</p>
+                <p><i class="fas fa-map-marker-alt text-primary me-2"></i><strong>Location:</strong> Section A, Shelf 3</p>
             `;
             document.getElementById('bookDetailsContent').innerHTML = content;
             new bootstrap.Modal(document.getElementById('bookDetailsModal')).show();
         }
 
+        // Book Actions
+        function borrowBook() {
+            Swal.fire({
+                title: 'Confirm Borrowing',
+                text: 'Would you like to borrow this book?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Yes, borrow'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Book borrowed successfully. Please collect from the library counter.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                    bootstrap.Modal.getInstance(document.getElementById('bookDetailsModal')).hide();
+                }
+            });
+        }
+
         function reserveBook(title) {
-            alert(`Book "${title}" has been reserved successfully!`);
+            Swal.fire({
+                title: 'Reserve Book',
+                text: `Would you like to reserve "${title}"?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Yes, reserve'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Reserved!',
+                        text: `"${title}" has been reserved. You'll be notified when available.`,
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
         }
 
-        function addToWaitlist(title) {
-            alert(`You have been added to the waitlist for "${title}"`);
+        function joinWaitlist(title) {
+            Swal.fire({
+                title: 'Join Waitlist',
+                text: `Join waitlist for "${title}"?`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#fbbf24',
+                confirmButtonText: 'Join Waitlist'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Added!',
+                        text: `You've been added to the waitlist for "${title}". Position: #3`,
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
         }
 
-        function searchForReservation() {
+        function renewBook(title) {
+            Swal.fire({
+                title: 'Renew Book',
+                text: `Renew "${title}" for another 14 days?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Renew'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Renewed!',
+                        text: `"${title}" has been renewed until April 8, 2026.`,
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        function returnBook(title) {
+            Swal.fire({
+                title: 'Return Book',
+                text: `Return "${title}" to the library?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                confirmButtonText: 'Return'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Returned!',
+                        text: `"${title}" has been returned successfully.`,
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        function payFine(book) {
+            Swal.fire({
+                title: 'Pay Fine',
+                html: `
+                    <p>Fine for <strong>${book}</strong></p>
+                    <p>Amount: KSh 50</p>
+                    <select class="form-select mt-3">
+                        <option>M-Pesa</option>
+                        <option>Credit Card</option>
+                        <option>Bank Transfer</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                confirmButtonText: 'Pay Now'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: 'Your fine has been paid.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        function payAllFines() {
+            Swal.fire({
+                title: 'Pay All Fines',
+                text: 'Total amount: KSh 250',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                confirmButtonText: 'Pay All'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'All fines have been paid.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        function cancelReservation(title) {
+            Swal.fire({
+                title: 'Cancel Reservation',
+                text: `Cancel reservation for "${title}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Yes, cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Cancelled!',
+                        text: 'Reservation has been cancelled.',
+                        icon: 'success',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        function viewCourse(courseCode) {
+            Swal.fire({
+                title: `Course Details: ${courseCode}`,
+                html: `
+                    <p><strong>Lecturer:</strong> Dr. Sarah Johnson</p>
+                    <p><strong>Schedule:</strong> Mon/Wed 10:00 AM</p>
+                    <p><strong>Attendance:</strong> 85%</p>
+                    <p><strong>Next Assignment:</strong> Due April 5, 2026</p>
+                `,
+                icon: 'info'
+            });
+        }
+
+        function searchCatalog() {
+            let query = document.getElementById('catalogSearch').value;
+            if(query.length > 2) {
+                console.log('Searching catalog for:', query);
+                // Implement catalog search
+            }
+        }
+
+        function filterByCategory(category) {
+            console.log('Filtering by category:', category);
+            // Implement category filter
+        }
+
+        function filterByAvailability(availability) {
+            console.log('Filtering by availability:', availability);
+            // Implement availability filter
+        }
+
+        function searchReservations() {
             let query = document.getElementById('reserveSearch').value;
-            alert(`Searching for: ${query}`);
-            // Implement actual search logic here
+            if(query.length > 2) {
+                console.log('Searching reservations for:', query);
+                // Implement reservation search
+            }
+        }
+
+        function filterReservations(filter) {
+            console.log('Filtering reservations by:', filter);
+            // Implement reservation filter
+        }
+
+        function viewBookDetails(title) {
+            showBookDetails(title);
+        }
+
+        function downloadResults() {
+            Swal.fire({
+                title: 'Download PDF',
+                text: 'Your results slip is being downloaded.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
 
         function printResultSlip() {
             window.print();
         }
 
-        function searchCatalog() {
-            let query = document.getElementById('catalogSearch').value;
-            console.log('Searching catalog for:', query);
-            // Implement catalog search
-        }
-
-        function filterCatalog(filter) {
-            console.log('Filtering by:', filter);
-            // Implement filter logic
-        }
-
-        function borrowBook() {
-            alert('Book borrowed successfully! Please collect from the library counter.');
-            bootstrap.Modal.getInstance(document.getElementById('bookDetailsModal')).hide();
+        function viewNotifications() {
+            Swal.fire({
+                title: 'Notifications',
+                html: `
+                    <div class="text-start">
+                        <p><i class="fas fa-book text-primary me-2"></i> "Computer Networks" is overdue</p>
+                        <p><i class="fas fa-calendar-check text-success me-2"></i> "Clean Code" is now available</p>
+                        <p><i class="fas fa-money-bill-wave text-warning me-2"></i> Fine payment reminder: KSh 50</p>
+                    </div>
+                `,
+                icon: 'info'
+            });
         }
 
         // Close search results when clicking outside
