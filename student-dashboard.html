@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - EduLib</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a2634 100%);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .student-profile {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .nav-link {
+            color: #a4b0be;
+            padding: 12px 25px;
+            margin: 5px 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i {
+            width: 25px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #4facfe;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Search Section */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .live-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+
+        /* Cards */
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Book Cards */
+        .book-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .availability-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Result Slip */
+        .result-slip {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .result-header {
+            border-bottom: 2px solid #4facfe;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .grade-A { color: #2ecc71; }
+        .grade-B { color: #3498db; }
+        .grade-C { color: #f39c12; }
+        .grade-D { color: #e67e22; }
+        .grade-F { color: #e74c3c; }
+
+        /* Modal */
+        .modal-book-details {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap me-2"></i>EduLib</h3>
+            <p>Student Portal</p>
+        </div>
+        
+        <div class="student-profile">
+            <div class="student-avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <h5>John Doe</h5>
+            <p class="text-muted small">Computer Science - Year 2</p>
+            <span class="badge bg-info">STU001</span>
+        </div>
+        
+        <nav class="nav flex-column">
+            <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                <i class="fas fa-home me-3"></i> Dashboard
+            </a>
+            <a class="nav-link" href="#" onclick="showSection('mycourses')">
+                <i class="fas fa-book-open me-3"></i> My Courses
+            </a>
+            <a class="nav-link" href="#" onclick="showSection('borrowed')">
+                <i class="fas fa-book me-3"></i> Borrowed Books
+            </a>
+            <a class="nav-link" href="#" onclick="showSection('reserve')">
+                <i class="fas fa-calendar-check me-3"></i> Reserve Books
+            </a>
+            <a class="nav-link" href="#" onclick="showSection('results')">
+                <i class="fas fa-chart-line me-3"></i> My Results
+            </a>
+            <a class="nav-link" href="#" onclick="showSection('library')">
+                <i class="fas fa-search me-3"></i> Library Catalog
+            </a>
+            <hr class="mx-3 text-secondary">
+            <a class="nav-link text-danger" href="index.html">
+                <i class="fas fa-sign-out-alt me-3"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div>
+                <h4 class="mb-0">Welcome back, John!</h4>
+                <small class="text-muted">Next due date: 25th March 2024</small>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <span class="badge bg-success">Active Semester</span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-light" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge bg-danger">2</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h3>5</h3>
+                                <p class="text-muted mb-0">Enrolled Courses</p>
+                            </div>
+                            <div class="bg-soft-primary p-3 rounded">
+                                <i class="fas fa-book-open fa-2x text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h3>3</h3>
+                                <p class="text-muted mb-0">Books Borrowed</p>
+                            </div>
+                            <div class="bg-soft-success p-3 rounded">
+                                <i class="fas fa-book fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h3>1</h3>
+                                <p class="text-muted mb-0">Overdue Books</p>
+                            </div>
+                            <div class="bg-soft-danger p-3 rounded">
+                                <i class="fas fa-exclamation-circle fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Search -->
+            <div class="stat-card mb-4">
+                <h5 class="mb-3">Quick Book Search</h5>
+                <div class="search-container">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" id="bookSearch" class="form-control" placeholder="Search by title or author..." onkeyup="handleSearch()">
+                    </div>
+                    <div id="searchResults" class="live-results"></div>
+                </div>
+            </div>
+
+            <!-- Currently Reading -->
+            <div class="stat-card">
+                <h5 class="mb-3">Currently Reading</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="book-card position-relative">
+                            <span class="badge bg-warning availability-badge">Due in 3 days</span>
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Introduction to Algorithms</h6>
+                            <p class="text-muted small">Cormen et al.</p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" style="width: 60%">60%</div>
+                            </div>
+                            <small>Return by: 25 Mar 2024</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="book-card position-relative">
+                            <span class="badge bg-success availability-badge">Available</span>
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Database Systems</h6>
+                            <p class="text-muted small">Silberschatz</p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" style="width: 30%">30%</div>
+                            </div>
+                            <small>Return by: 30 Mar 2024</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="book-card position-relative">
+                            <span class="badge bg-danger availability-badge">Overdue</span>
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Computer Networks</h6>
+                            <p class="text-muted small">Tanenbaum</p>
+                            <div class="progress mb-2">
+                                <div class="progress-bar" style="width: 100%">100%</div>
+                            </div>
+                            <small>Overdue by: 5 days</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Borrowed Books Section -->
+        <div id="borrowed-section" style="display: none;">
+            <div class="stat-card">
+                <h5 class="mb-3">My Borrowed Books</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Author</th>
+                            <th>Borrowed Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Introduction to Algorithms</td>
+                            <td>Cormen et al.</td>
+                            <td>10 Mar 2024</td>
+                            <td>25 Mar 2024</td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td><button class="btn btn-sm btn-primary">Renew</button></td>
+                        </tr>
+                        <tr>
+                            <td>Database Systems</td>
+                            <td>Silberschatz</td>
+                            <td>15 Mar 2024</td>
+                            <td>30 Mar 2024</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td><button class="btn btn-sm btn-primary">Renew</button></td>
+                        </tr>
+                        <tr>
+                            <td>Computer Networks</td>
+                            <td>Tanenbaum</td>
+                            <td>05 Mar 2024</td>
+                            <td>20 Mar 2024</td>
+                            <td><span class="badge bg-danger">Overdue</span></td>
+                            <td><button class="btn btn-sm btn-danger">Return Now</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reserve Books Section -->
+        <div id="reserve-section" style="display: none;">
+            <div class="stat-card">
+                <h5 class="mb-3">Reserve a Book</h5>
+                
+                <!-- Reservation Form -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Search Book to Reserve</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter book title or ISBN" id="reserveSearch">
+                            <button class="btn btn-primary" onclick="searchForReservation()">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Books for Reservation -->
+                <div class="row" id="availableBooks">
+                    <div class="col-md-4">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Clean Code</h6>
+                            <p class="text-muted">Robert Martin</p>
+                            <p><span class="badge bg-success">2 copies available</span></p>
+                            <button class="btn btn-sm btn-outline-primary w-100" onclick="reserveBook('Clean Code')">
+                                Reserve
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Design Patterns</h6>
+                            <p class="text-muted">GoF</p>
+                            <p><span class="badge bg-warning">1 copy available</span></p>
+                            <button class="btn btn-sm btn-outline-primary w-100" onclick="reserveBook('Design Patterns')">
+                                Reserve
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Python Programming</h6>
+                            <p class="text-muted">Lutz</p>
+                            <p><span class="badge bg-danger">No copies available</span></p>
+                            <button class="btn btn-sm btn-outline-warning w-100" onclick="addToWaitlist('Python Programming')">
+                                Join Waitlist
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" style="display: none;">
+            <div class="result-slip">
+                <div class="result-header text-center">
+                    <h4>ACADEMIC RESULTS SLIP</h4>
+                    <p>Spring Semester 2024</p>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong>Student Name:</strong> John Doe</p>
+                        <p><strong>Registration No:</strong> STU001</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Programme:</strong> B.Sc. Computer Science</p>
+                        <p><strong>Year of Study:</strong> Year 2</p>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <th>CAT (30)</th>
+                            <th>Exam (70)</th>
+                            <th>Total</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CSC301</td>
+                            <td>Data Structures & Algorithms</td>
+                            <td>25</td>
+                            <td>58</td>
+                            <td>83</td>
+                            <td class="grade-A fw-bold">A</td>
+                        </tr>
+                        <tr>
+                            <td>CSC305</td>
+                            <td>Database Systems</td>
+                            <td>22</td>
+                            <td>62</td>
+                            <td>84</td>
+                            <td class="grade-A fw-bold">A</td>
+                        </tr>
+                        <tr>
+                            <td>CSC310</td>
+                            <td>Operating Systems</td>
+                            <td>18</td>
+                            <td>45</td>
+                            <td>63</td>
+                            <td class="grade-B fw-bold">B</td>
+                        </tr>
+                        <tr>
+                            <td>CSC320</td>
+                            <td>Computer Networks</td>
+                            <td>20</td>
+                            <td>42</td>
+                            <td>62</td>
+                            <td class="grade-B fw-bold">B</td>
+                        </tr>
+                        <tr>
+                            <td>CSC330</td>
+                            <td>Software Engineering</td>
+                            <td>28</td>
+                            <td>65</td>
+                            <td>93</td>
+                            <td class="grade-A fw-bold">A</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="5" class="text-end"><strong>Average Score:</strong></td>
+                            <td><strong>77.0 (B+)</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="mt-4 text-end">
+                    <button class="btn btn-primary" onclick="printResultSlip()">
+                        <i class="fas fa-print me-2"></i>Print Result Slip
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Catalog Section -->
+        <div id="library-section" style="display: none;">
+            <div class="stat-card">
+                <h5 class="mb-3">Library Catalog</h5>
+                
+                <!-- Advanced Search -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <input type="text" id="catalogSearch" class="form-control" placeholder="Search by title, author, ISBN..." onkeyup="searchCatalog()">
+                            <button class="btn btn-primary" type="button">Search</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" onchange="filterCatalog(this.value)">
+                            <option value="all">All Categories</option>
+                            <option value="programming">Programming</option>
+                            <option value="database">Database</option>
+                            <option value="networking">Networking</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Catalog Results -->
+                <div class="row" id="catalogResults">
+                    <div class="col-md-3">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>The C Programming Language</h6>
+                            <p class="text-muted">K&R</p>
+                            <p><span class="badge bg-success">Available: 3</span></p>
+                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Java: The Complete Reference</h6>
+                            <p class="text-muted">Schildt</p>
+                            <p><span class="badge bg-warning">Available: 1</span></p>
+                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Python Crash Course</h6>
+                            <p class="text-muted">Matthes</p>
+                            <p><span class="badge bg-danger">Available: 0</span></p>
+                            <button class="btn btn-sm btn-outline-warning w-100">Reserve</button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="book-card">
+                            <div class="book-cover">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h6>Database Design</h6>
+                            <p class="text-muted">Connolly</p>
+                            <p><span class="badge bg-success">Available: 2</span></p>
+                            <button class="btn btn-sm btn-outline-primary w-100">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div class="modal fade" id="bookDetailsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="bookDetailsContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="borrowBook()">Borrow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('mycourses-section').style.display = 'none';
+            document.getElementById('borrowed-section').style.display = 'none';
+            document.getElementById('reserve-section').style.display = 'none';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('library-section').style.display = 'none';
+            
+            // Show selected section
+            document.getElementById(section + '-section').style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.closest('.nav-link').classList.add('active');
+        }
+
+        function handleSearch() {
+            let query = document.getElementById('bookSearch').value;
+            let resultsBox = document.getElementById('searchResults');
+            
+            if(query.length > 2) {
+                resultsBox.style.display = 'block';
+                resultsBox.innerHTML = `
+                    <div class="result-item" onclick="selectBook('Introduction to Algorithms')">
+                        <strong>Introduction to Algorithms</strong><br>
+                        <small>by Cormen et al. - Available: 3 copies</small>
+                    </div>
+                    <div class="result-item" onclick="selectBook('Database Systems')">
+                        <strong>Database Systems</strong><br>
+                        <small>by Silberschatz - Available: 1 copy</small>
+                    </div>
+                    <div class="result-item" onclick="selectBook('Computer Networks')">
+                        <strong>Computer Networks</strong><br>
+                        <small>by Tanenbaum - Available: 0 copies (Reservable)</small>
+                    </div>
+                `;
+            } else {
+                resultsBox.style.display = 'none';
+            }
+        }
+
+        function selectBook(title) {
+            document.getElementById('bookSearch').value = title;
+            document.getElementById('searchResults').style.display = 'none';
+            showBookDetails(title);
+        }
+
+        function showBookDetails(title) {
+            let content = `
+                <h6>${title}</h6>
+                <p><strong>ISBN:</strong> 978-0-13-110362-7</p>
+                <p><strong>Edition:</strong> 3rd</p>
+                <p><strong>Year:</strong> 2009</p>
+                <p><strong>Available Copies:</strong> 2</p>
+                <p><strong>Total Copies:</strong> 5</p>
+                <p><strong>Location:</strong> Section A, Shelf 3</p>
+            `;
+            document.getElementById('bookDetailsContent').innerHTML = content;
+            new bootstrap.Modal(document.getElementById('bookDetailsModal')).show();
+        }
+
+        function reserveBook(title) {
+            alert(`Book "${title}" has been reserved successfully!`);
+        }
+
+        function addToWaitlist(title) {
+            alert(`You have been added to the waitlist for "${title}"`);
+        }
+
+        function searchForReservation() {
+            let query = document.getElementById('reserveSearch').value;
+            alert(`Searching for: ${query}`);
+            // Implement actual search logic here
+        }
+
+        function printResultSlip() {
+            window.print();
+        }
+
+        function searchCatalog() {
+            let query = document.getElementById('catalogSearch').value;
+            console.log('Searching catalog for:', query);
+            // Implement catalog search
+        }
+
+        function filterCatalog(filter) {
+            console.log('Filtering by:', filter);
+            // Implement filter logic
+        }
+
+        function borrowBook() {
+            alert('Book borrowed successfully! Please collect from the library counter.');
+            bootstrap.Modal.getInstance(document.getElementById('bookDetailsModal')).hide();
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(event) {
+            let searchBox = document.getElementById('bookSearch');
+            let resultsBox = document.getElementById('searchResults');
+            if(searchBox && resultsBox && !searchBox.contains(event.target) && !resultsBox.contains(event.target)) {
+                resultsBox.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

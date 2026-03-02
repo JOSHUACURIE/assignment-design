@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - EduLib</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --pure-white: #ffffff;
+            --soft-white: #f8fafc;
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --light-blue: #dbeafe;
+            --forest-green: #16a34a;
+            --emerald-green: #10b981;
+            --light-green: #dcfce7;
+            --slate-gray: #334155;
+            --light-gray: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--soft-white);
+            color: var(--slate-gray);
+        }
+
+        /* Sidebar - Clean White with Blue/Green Accents */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--pure-white);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border-right: 1px solid var(--light-gray);
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .sidebar-header h3 {
+            background: linear-gradient(135deg, var(--primary-blue), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .teacher-profile-card {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--light-blue), var(--light-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid var(--pure-white);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
+        }
+
+        .avatar-circle i {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .teacher-name {
+            font-weight: 700;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .teacher-badge {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            padding: 20px 15px;
+        }
+
+        .nav-item {
+            list-style: none;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--slate-gray);
+            text-decoration: none;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link-custom i {
+            width: 30px;
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            transition: all 0.3s;
+        }
+
+        .nav-link-custom:hover {
+            background: var(--light-blue);
+            transform: translateX(5px);
+        }
+
+        .nav-link-custom.active {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--pure-white);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .nav-link-custom.active i {
+            color: var(--pure-white);
+        }
+
+        .logout-link {
+            margin-top: 30px;
+            color: #ef4444;
+        }
+
+        .logout-link i {
+            color: #ef4444;
+        }
+
+        .logout-link:hover {
+            background: #fee2e2;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--light-gray);
+        }
+
+        .welcome-text h2 {
+            font-weight: 700;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .welcome-text p {
+            color: #64748b;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-outline-custom {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            color: var(--slate-gray);
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-custom:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--forest-green));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon.blue {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .stat-icon.green {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--slate-gray);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid var(--light-gray);
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--slate-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary-blue);
+        }
+
+        /* Tables */
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .table-custom th {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 15px;
+            background: var(--soft-white);
+            border-radius: 12px;
+        }
+
+        .table-custom td {
+            background: var(--pure-white);
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .student-row {
+            transition: all 0.3s;
+        }
+
+        .student-row:hover {
+            background: var(--light-blue);
+            transform: scale(1.01);
+        }
+
+        /* Score Inputs */
+        .score-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .score-input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .score-input:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .score-input.cat {
+            border-color: var(--primary-blue);
+        }
+
+        .score-input.exam {
+            border-color: var(--forest-green);
+        }
+
+        /* Grade Badges */
+        .grade-badge {
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .grade-A {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .grade-B {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .grade-C {
+            background: #fef9c3;
+            color: #ca8a04;
+        }
+
+        .grade-D {
+            background: #ffe4e6;
+            color: #e11d48;
+        }
+
+        .grade-F {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Course Cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .course-card {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .course-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .course-code {
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .course-progress {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-blue {
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-blue));
+        }
+
+        /* Library Section */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .book-card:hover {
+            border-color: var(--forest-green);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, var(--light-blue), var(--light-green));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .book-cover i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+        }
+
+        .book-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .book-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-available {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        .status-borrowed {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-item {
+            background: var(--pure-white);
+            border: 1px solid var(--light-gray);
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .action-item:hover {
+            border-color: var(--forest-green);
+            transform: translateY(-5px);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .action-icon.blue {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        .action-icon.green {
+            background: var(--light-green);
+            color: var(--forest-green);
+        }
+
+        /* Tabs Container */
+        .tab-content {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid var(--light-gray);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -280px;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-graduation-cap me-2"></i>EduLib</h3>
+        </div>
+        
+        <div class="teacher-profile-card">
+            <div class="avatar-circle">
+                <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h5 class="teacher-name">Dr. Sarah Johnson</h5>
+            <span class="teacher-badge">Senior Lecturer</span>
+            <p class="text-muted small mt-2">Faculty of Computing</p>
+        </div>
+
+        <div class="nav-links">
+            <!-- Dashboard Link -->
+            <a href="#" class="nav-link-custom active" onclick="switchTab('dashboard', this)">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <!-- My Courses Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('courses', this)">
+                <i class="fas fa-book-open"></i>
+                <span>My Courses</span>
+            </a>
+            
+            <!-- Grade Book Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('gradebook', this)">
+                <i class="fas fa-pen-alt"></i>
+                <span>Grade Book</span>
+            </a>
+            
+            <!-- Submit Scores Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('scores', this)">
+                <i class="fas fa-file-signature"></i>
+                <span>Submit Scores</span>
+            </a>
+            
+            <!-- Library Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('library', this)">
+                <i class="fas fa-book"></i>
+                <span>Library Resources</span>
+            </a>
+            
+            <!-- Reports Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('reports', this)">
+                <i class="fas fa-chart-line"></i>
+                <span>Reports</span>
+            </a>
+            
+            <!-- Settings Link -->
+            <a href="#" class="nav-link-custom" onclick="switchTab('settings', this)">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+            
+            <!-- Logout Link -->
+            <a href="index.html" class="nav-link-custom logout-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="welcome-text">
+                <h2>Welcome back, Dr. Johnson 👋</h2>
+                <p><i class="far fa-calendar-alt me-2 text-primary"></i>Monday, March 2, 2026 | Semester 2</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-outline-custom" onclick="triggerAnnouncement()">
+                    <i class="fas fa-bullhorn me-2"></i>Announce
+                </button>
+                <button class="btn-primary-custom" onclick="quickHelp()">
+                    <i class="fas fa-question-circle me-2"></i>Help
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="tab-content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="stat-value">04</div>
+                    <div class="stat-label">Active Courses</div>
+                    <small class="text-success mt-2 d-block"><i class="fas fa-arrow-up"></i> +2 from last sem</small>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">142</div>
+                    <div class="stat-label">Total Students</div>
+                    <small class="text-success mt-2 d-block"><i class="fas fa-user-plus"></i> 12 new</small>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Pending Grades</div>
+                    <small class="text-warning mt-2 d-block">3 courses pending</small>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-value">85%</div>
+                    <div class="stat-label">Attendance Rate</div>
+                    <small class="text-success mt-2 d-block"><i class="fas fa-arrow-up"></i> +5%</small>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions mb-4">
+                <div class="action-item" onclick="quickAction('attendance')">
+                    <div class="action-icon blue">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h6>Take Attendance</h6>
+                    <small class="text-muted">Mark today's class</small>
+                </div>
+                
+                <div class="action-item" onclick="quickAction('grades')">
+                    <div class="action-icon green">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h6>Submit Grades</h6>
+                    <small class="text-muted">CSC301 pending</small>
+                </div>
+                
+                <div class="action-item" onclick="quickAction('materials')">
+                    <div class="action-icon blue">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h6>Upload Materials</h6>
+                    <small class="text-muted">Share resources</small>
+                </div>
+                
+                <div class="action-item" onclick="quickAction('meeting')">
+                    <div class="action-icon green">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h6>Schedule Meeting</h6>
+                    <small class="text-muted">Office hours</small>
+                </div>
+            </div>
+
+            <!-- My Courses Overview -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-book-open"></i>
+                        My Courses This Semester
+                    </h5>
+                    <span class="badge bg-primary">4 Active Courses</span>
+                </div>
+                
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="course-code">CSC301</span>
+                            <span class="badge bg-success">45 students</span>
+                        </div>
+                        <h6>Data Structures & Algorithms</h6>
+                        <p class="text-muted small">Mon/Wed 10:00 AM - 12:00 PM</p>
+                        <div class="course-progress mb-2">
+                            <div class="progress-bar-blue" style="width: 75%"></div>
+                        </div>
+                        <small>75% Syllabus Covered</small>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="course-code">CSC305</span>
+                            <span class="badge bg-success">38 students</span>
+                        </div>
+                        <h6>Database Systems</h6>
+                        <p class="text-muted small">Tue/Thu 2:00 PM - 4:00 PM</p>
+                        <div class="course-progress mb-2">
+                            <div class="progress-bar-blue" style="width: 60%"></div>
+                        </div>
+                        <small>60% Syllabus Covered</small>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="course-code">CSC401</span>
+                            <span class="badge bg-success">32 students</span>
+                        </div>
+                        <h6>Software Engineering</h6>
+                        <p class="text-muted small">Fri 9:00 AM - 12:00 PM</p>
+                        <div class="course-progress mb-2">
+                            <div class="progress-bar-blue" style="width: 45%"></div>
+                        </div>
+                        <small>45% Syllabus Covered</small>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="course-code">CSC410</span>
+                            <span class="badge bg-success">27 students</span>
+                        </div>
+                        <h6>Research Methods</h6>
+                        <p class="text-muted small">Wed 2:00 PM - 5:00 PM</p>
+                        <div class="course-progress mb-2">
+                            <div class="progress-bar-blue" style="width: 30%"></div>
+                        </div>
+                        <small>30% Syllabus Covered</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Book Section -->
+        <div id="gradebook" class="tab-content" style="display: none;">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-chart-line"></i>
+                        Class Performance Overview
+                    </h5>
+                    <select class="form-select w-auto" onchange="loadCoursePerformance(this.value)">
+                        <option>CSC301 - Data Structures</option>
+                        <option>CSC305 - Database Systems</option>
+                        <option>CSC401 - Software Engineering</option>
+                    </select>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <canvas id="performanceChart" height="300"></canvas>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="grade-distribution">
+                            <h6 class="mb-3">Grade Distribution</h6>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>A (70-100)</span>
+                                    <span>15 students</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>B (60-69)</span>
+                                    <span>12 students</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-primary" style="width: 28%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>C (50-59)</span>
+                                    <span>10 students</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-info" style="width: 23%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>D (40-49)</span>
+                                    <span>5 students</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-warning" style="width: 12%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>F (Below 40)</span>
+                                    <span>3 students</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-danger" style="width: 7%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Scores Section -->
+        <div id="scores" class="tab-content" style="display: none;">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-edit"></i>
+                        Submit Course Scores
+                    </h5>
+                    <div class="d-flex gap-3">
+                        <select class="form-select w-auto" id="courseSelect">
+                            <option value="CSC301">CSC301 - Data Structures</option>
+                            <option value="CSC305">CSC305 - Database Systems</option>
+                            <option value="CSC401">CSC401 - Software Engineering</option>
+                        </select>
+                        <select class="form-select w-auto" id="assessmentSelect">
+                            <option>CAT 1 (30%)</option>
+                            <option>CAT 2 (30%)</option>
+                            <option>End Term Exam (70%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-box mb-4">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search student..." id="studentSearch" onkeyup="filterStudents()">
+                </div>
+                
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Reg Number</th>
+                            <th>Student Name</th>
+                            <th>CAT Score (30)</th>
+                            <th>Exam Score (70)</th>
+                            <th>Total</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scoreTableBody">
+                        <tr class="student-row">
+                            <td><strong>SIT/001/24</strong></td>
+                            <td>Peter Kamau</td>
+                            <td><input type="number" class="score-input cat" value="26" min="0" max="30" onchange="calculateGrade(this)"></td>
+                            <td><input type="number" class="score-input exam" value="55" min="0" max="70" onchange="calculateGrade(this)"></td>
+                            <td><span class="total-score">81</span></td>
+                            <td><span class="grade-badge grade-A">A</span></td>
+                            <td><span class="badge bg-success">Saved</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="saveStudentScore(this)"><i class="fas fa-save"></i></button></td>
+                        </tr>
+                        <tr class="student-row">
+                            <td><strong>SIT/042/24</strong></td>
+                            <td>Mercy Wanjiku</td>
+                            <td><input type="number" class="score-input cat" value="20" min="0" max="30" onchange="calculateGrade(this)"></td>
+                            <td><input type="number" class="score-input exam" value="48" min="0" max="70" onchange="calculateGrade(this)"></td>
+                            <td><span class="total-score">68</span></td>
+                            <td><span class="grade-badge grade-B">B</span></td>
+                            <td><span class="badge bg-success">Saved</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="saveStudentScore(this)"><i class="fas fa-save"></i></button></td>
+                        </tr>
+                        <tr class="student-row">
+                            <td><strong>SIT/089/24</strong></td>
+                            <td>James Otieno</td>
+                            <td><input type="number" class="score-input cat" value="15" min="0" max="30" onchange="calculateGrade(this)"></td>
+                            <td><input type="number" class="score-input exam" value="35" min="0" max="70" onchange="calculateGrade(this)"></td>
+                            <td><span class="total-score">50</span></td>
+                            <td><span class="grade-badge grade-C">C</span></td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="saveStudentScore(this)"><i class="fas fa-save"></i></button></td>
+                        </tr>
+                        <tr class="student-row">
+                            <td><strong>SIT/112/24</strong></td>
+                            <td>Mary Akinyi</td>
+                            <td><input type="number" class="score-input cat" value="8" min="0" max="30" onchange="calculateGrade(this)"></td>
+                            <td><input type="number" class="score-input exam" value="25" min="0" max="70" onchange="calculateGrade(this)"></td>
+                            <td><span class="total-score">33</span></td>
+                            <td><span class="grade-badge grade-F">F</span></td>
+                            <td><span class="badge bg-danger">Failing</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="saveStudentScore(this)"><i class="fas fa-save"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-4 d-flex justify-content-end gap-3">
+                    <button class="btn-outline-custom" onclick="exportScores()">
+                        <i class="fas fa-file-export me-2"></i>Export CSV
+                    </button>
+                    <button class="btn-primary-custom" onclick="submitAllScores()">
+                        <i class="fas fa-check-circle me-2"></i>Submit All Scores
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Library Section -->
+        <div id="library" class="tab-content" style="display: none;">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-book"></i>
+                        Library Resources
+                    </h5>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search books..." id="librarySearch" onkeyup="searchBooks()">
+                    </div>
+                </div>
+
+                <div class="book-grid">
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Introduction to Algorithms</h6>
+                        <p class="book-author">Cormen et al.</p>
+                        <span class="book-status status-available">3 Available</span>
+                        <button class="btn btn-sm btn-outline-primary mt-3 w-100" onclick="borrowBook('Introduction to Algorithms')">Borrow</button>
+                    </div>
+                    
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Database Systems</h6>
+                        <p class="book-author">Silberschatz</p>
+                        <span class="book-status status-available">2 Available</span>
+                        <button class="btn btn-sm btn-outline-primary mt-3 w-100" onclick="borrowBook('Database Systems')">Borrow</button>
+                    </div>
+                    
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Clean Code</h6>
+                        <p class="book-author">Robert Martin</p>
+                        <span class="book-status status-borrowed">1 Borrowed</span>
+                        <button class="btn btn-sm btn-outline-warning mt-3 w-100" onclick="reserveBook('Clean Code')">Reserve</button>
+                    </div>
+                    
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Design Patterns</h6>
+                        <p class="book-author">GoF</p>
+                        <span class="book-status status-available">4 Available</span>
+                        <button class="btn btn-sm btn-outline-primary mt-3 w-100" onclick="borrowBook('Design Patterns')">Borrow</button>
+                    </div>
+                    
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Computer Networks</h6>
+                        <p class="book-author">Tanenbaum</p>
+                        <span class="book-status status-available">2 Available</span>
+                        <button class="btn btn-sm btn-outline-primary mt-3 w-100" onclick="borrowBook('Computer Networks')">Borrow</button>
+                    </div>
+                    
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h6 class="book-title">Python Programming</h6>
+                        <p class="book-author">Lutz</p>
+                        <span class="book-status status-borrowed">0 Available</span>
+                        <button class="btn btn-sm btn-outline-warning mt-3 w-100" onclick="reserveBook('Python Programming')">Join Waitlist</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Borrowed Books -->
+            <div class="glass-card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        <i class="fas fa-clock"></i>
+                        My Borrowed Books
+                    </h5>
+                </div>
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Borrowed Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Artificial Intelligence: A Modern Approach</td>
+                            <td>Feb 25, 2026</td>
+                            <td>Mar 11, 2026</td>
+                            <td><span class="badge bg-warning">Due Soon</span></td>
+                            <td><button class="btn btn-sm btn-outline-primary">Renew</button></td>
+                        </tr>
+                        <tr>
+                            <td>Machine Learning Yearning</td>
+                            <td>Feb 10, 2026</td>
+                            <td>Feb 24, 2026</td>
+                            <td><span class="badge bg-danger">Overdue</span></td>
+                            <td><button class="btn btn-sm btn-danger">Return</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('performanceChart')?.getContext('2d');
+            if(ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['CAT 1', 'CAT 2', 'Assignment', 'Exam'],
+                        datasets: [{
+                            label: 'Class Average',
+                            data: [68, 72, 75, 70],
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // Tab Switching
+        function switchTab(tabId, element) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).style.display = 'block';
+            
+            // Update active state
+            document.querySelectorAll('.nav-link-custom').forEach(link => {
+                link.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        // Calculate Grade
+        function calculateGrade(input) {
+            let row = input.closest('tr');
+            let cat = parseInt(row.querySelector('.cat').value) || 0;
+            let exam = parseInt(row.querySelector('.exam').value) || 0;
+            let total = cat + exam;
+            
+            // Update total
+            row.querySelector('.total-score').textContent = total;
+            
+            // Determine grade
+            let gradeSpan = row.querySelector('.grade-badge');
+            let grade = '';
+            let gradeClass = '';
+            
+            if(total >= 70) {
+                grade = 'A';
+                gradeClass = 'grade-A';
+            } else if(total >= 60) {
+                grade = 'B';
+                gradeClass = 'grade-B';
+            } else if(total >= 50) {
+                grade = 'C';
+                gradeClass = 'grade-C';
+            } else if(total >= 40) {
+                grade = 'D';
+                gradeClass = 'grade-D';
+            } else {
+                grade = 'F';
+                gradeClass = 'grade-F';
+            }
+            
+            gradeSpan.textContent = grade;
+            gradeSpan.className = `grade-badge ${gradeClass}`;
+        }
+
+        // Save Student Score
+        function saveStudentScore(button) {
+            let row = button.closest('tr');
+            let studentName = row.cells[1].textContent;
+            let total = row.querySelector('.total-score').textContent;
+            
+            Swal.fire({
+                title: 'Save Score?',
+                html: `<p>Saving score for <strong>${studentName}</strong></p>
+                       <p>Total Score: <strong>${total}</strong></p>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#16a34a',
+                confirmButtonText: 'Save',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Saved!',
+                        text: `Scores for ${studentName} have been saved.`,
+                        icon: 'success',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        // Submit All Scores
+        function submitAllScores() {
+            Swal.fire({
+                title: 'Submit All Scores?',
+                text: 'This will publish all grades to the student portal.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Yes, submit all',
+                cancelButtonText: 'Review'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'All scores have been published.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                }
+            });
+        }
+
+        // Filter Students
+        function filterStudents() {
+            let input = document.getElementById('studentSearch');
+            let filter = input.value.toUpperCase();
+            let table = document.getElementById('scoreTableBody');
+            let rows = table.getElementsByTagName('tr');
+            
+            for (let row of rows) {
+                let nameCell = row.cells[1];
+                if (nameCell) {
+                    let textValue = nameCell.textContent || nameCell.innerText;
+                    if (textValue.toUpperCase().indexOf(filter) > -1) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // Search Books
+        function searchBooks() {
+            let input = document.getElementById('librarySearch');
+            let filter = input.value.toUpperCase();
+            let bookCards = document.querySelectorAll('.book-card');
+            
+            bookCards.forEach(card => {
+                let title = card.querySelector('.book-title').textContent;
+                if (title.toUpperCase().indexOf(filter) > -1) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Borrow Book
+        function borrowBook(title) {
+            Swal.fire({
+                title: 'Borrow Book?',
+                text: `Would you like to borrow "${title}"?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Yes, borrow'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Borrowed!',
+                        text: `"${title}" has been added to your borrowed books.`,
+                        icon: 'success',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        // Reserve Book
+        function reserveBook(title) {
+            Swal.fire({
+                title: 'Join Waitlist?',
+                text: `"${title}" is currently unavailable. Join waitlist?`,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#eab308',
+                confirmButtonText: 'Join Waitlist'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Added!',
+                        text: `You've been added to the waitlist for "${title}".`,
+                        icon: 'success',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        // Quick Actions
+        function quickAction(action) {
+            let titles = {
+                'attendance': 'Take Attendance',
+                'grades': 'Submit Grades',
+                'materials': 'Upload Materials',
+                'meeting': 'Schedule Meeting'
+            };
+            
+            Swal.fire({
+                title: titles[action],
+                text: `Opening ${titles[action].toLowerCase()} module...`,
+                icon: 'info',
+                timer: 1000,
+                showConfirmButton: false
+            });
+        }
+
+        // Trigger Announcement
+        function triggerAnnouncement() {
+            Swal.fire({
+                title: 'New Announcement',
+                html: `
+                    <input type="text" id="announcementTitle" class="swal2-input" placeholder="Title">
+                    <textarea id="announcementBody" class="swal2-textarea" placeholder="Message content..."></textarea>
+                    <select id="announcementAudience" class="swal2-select">
+                        <option value="all">All Students</option>
+                        <option value="CSC301">CSC301 Only</option>
+                        <option value="CSC305">CSC305 Only</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                confirmButtonText: 'Send Announcement',
+                preConfirm: () => {
+                    return {
+                        title: document.getElementById('announcementTitle').value,
+                        body: document.getElementById('announcementBody').value,
+                        audience: document.getElementById('announcementAudience').value
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Sent!',
+                        text: 'Announcement has been broadcast successfully.',
+                        icon: 'success',
+                        timer: 1500
+                    });
+                }
+            });
+        }
+
+        // Quick Help
+        function quickHelp() {
+            Swal.fire({
+                title: 'Help Center',
+                text: 'How can we assist you today?',
+                icon: 'info',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'FAQs',
+                denyButtonText: 'Contact Support'
+            });
+        }
+
+        // Export Scores
+        function exportScores() {
+            Swal.fire({
+                title: 'Export Data',
+                text: 'Your file is being prepared for download.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        // Load Course Performance
+        function loadCoursePerformance(course) {
+            console.log('Loading performance for:', course);
+            // In a real app, this would fetch data from server
+        }
+    </script>
+</body>
+</html>
